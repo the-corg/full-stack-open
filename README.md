@@ -10,4 +10,5 @@ All exercises completed: reading material on HTML and CSS, as well as three UML 
 ### a. Introduction to React
 ### b. JavaScript
 - `part1/courseinfo`: refactoring a messy React component
+### c. Component state, event handlers
 In progress...
