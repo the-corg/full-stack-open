@@ -8,6 +8,6 @@ All exercises completed: reading material on HTML and CSS, as well as three UML 
 
 ## Part 1. Introduction to React
 ### a. Introduction to React
-- `part1/courseinfo`: refactoring a messy React component
 ### b. JavaScript
+- `part1/courseinfo`: refactoring a messy React component
 In progress...
