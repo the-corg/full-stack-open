@@ -7,9 +7,10 @@ const App = () => {
   const [bad, setBad] = useState(0);
 
   const handleRating = (rating, setRating) => () => {
-    console.log("value now", rating);
     setRating(rating + 1);
   };
+
+  const all = good + neutral + bad;
 
   return (
     <>
@@ -27,6 +28,12 @@ const App = () => {
           neutral {neutral}
           <br />
           bad {bad}
+          <br />
+          all {all}
+          <br />
+          average {(good - bad) / all}
+          <br />
+          positive {(good * 100) / all} %
         </p>
       </div>
     </>
