@@ -14,3 +14,7 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ### d. A more complex state, debugging React apps
 - `part1/unicafe`: Exercises 1.6 - 1.11, a simple app for gathering feedback and displaying statistics
 - `part1/anecdotes`: Exercises 1.12 - 1.14, a simple app for displaying random quotes and aphorisms and upvoting them
+
+## Part 2. Communicating with server
+### a. Rendering a collection, modules
+In progress...
