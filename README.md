@@ -12,4 +12,5 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 - `part1/courseinfo`: Exercises 1.1 - 1.5, refactoring a messy React component
 ### c. Component state, event handlers
 ### d. A more complex state, debugging React apps
-- `part1/unicafe`: Exercises 1.6 - 1.11, simple app for gathering feedback and displaying statistics
+- `part1/unicafe`: Exercises 1.6 - 1.11, a simple app for gathering feedback and displaying statistics
+- `part1/anecdotes`: Exercises 1.12 - 1.14, a simple app for displaying random quotes and aphorisms and upvoting them
