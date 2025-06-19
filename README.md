@@ -17,4 +17,6 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 
 ## Part 2. Communicating with server
 ### a. Rendering a collection, modules
+- `part2/courseinfo`: Exercises 2.1 - 2.5, refactoring and generalizing the app from part 1 to support an arbitrary number of courses and course parts
+### b. Forms
 In progress...
