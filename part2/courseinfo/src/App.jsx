@@ -15,9 +15,12 @@ const Content = ({ parts }) => (
 );
 
 const Total = ({ parts }) => {
-  let sum = 0;
-  parts.forEach((p) => (sum += p.exercises));
-  return <p>Number of exercises {sum}</p>;
+  const sum = parts.reduce((sumSoFar, part) => sumSoFar + part.exercises, 0);
+  return (
+    <p>
+      <b>total of {sum} exercises</b>
+    </p>
+  );
 };
 
 const Course = ({ course }) => (
@@ -47,6 +50,11 @@ const App = () => {
         name: "State of a component",
         exercises: 14,
         id: 3,
+      },
+      {
+        name: "Redux",
+        exercises: 11,
+        id: 4,
       },
     ],
   };
