@@ -20,6 +20,7 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 - `part2/courseinfo`: Exercises 2.1 - 2.5, refactoring and generalizing the app from part 1 to support an arbitrary number of courses and course parts
 ### b. Forms
 ### c. Getting data from server
-- `part2/phonebook`: Exercises 2.6 - 2.11, a simple app with a form and a text filter, fetching data from the server with Axios
 ### d. Altering data in server
+- `part2/phonebook`: Exercises 2.6 - 2.15, a simple phonebook app that communicates with a REST API server using Axios and allows filtering, adding, updating, and deleting records
+### e. Adding styles to React app
 In progress...

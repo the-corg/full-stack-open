@@ -19,15 +19,30 @@ const App = () => {
   const newPerson = (event) => {
     event.preventDefault();
 
-    if (persons.findIndex((person) => person.name === newName) !== -1) {
-      alert(`${newName} is already added to phonebook`);
-      return;
-    }
-
     const newPerson = {
       name: newName,
       number: newNumber,
     };
+
+    let existingIndex = persons.findIndex((person) => person.name === newName);
+    if (existingIndex !== -1) {
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with the new one?`
+        )
+      ) {
+        personService
+          .update(persons[existingIndex].id, newPerson)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((person) =>
+                person.id === returnedPerson.id ? returnedPerson : person
+              )
+            );
+          });
+      }
+      return;
+    }
 
     personService.create(newPerson).then((returnedPerson) => {
       setPersons(persons.concat(returnedPerson));
