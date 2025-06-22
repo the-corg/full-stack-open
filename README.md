@@ -21,6 +21,8 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ### b. Forms
 ### c. Getting data from server
 ### d. Altering data in server
-- `part2/phonebook`: Exercises 2.6 - 2.15, a simple phonebook app that communicates with a REST API server using Axios and allows filtering, adding, updating, and deleting records
 ### e. Adding styles to React app
+- `part2/phonebook`: Exercises 2.6 - 2.17, a simple phonebook app that communicates with a REST API server using Axios and allows filtering, adding, updating, and deleting records
+- `part2/countries`: Exercises 2.18 - 2.20, a simple app that shows information about countries obtained via a REST API
+
 In progress...
