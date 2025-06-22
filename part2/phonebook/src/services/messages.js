@@ -3,4 +3,9 @@ const showNotification = (setMessage, message) => {
   setTimeout(() => setMessage(null), 3000);
 };
 
-export default { showNotification };
+const showError = (setMessage, message) => {
+  setMessage(message);
+  setTimeout(() => setMessage(null), 5000);
+};
+
+export default { showNotification, showError };
