@@ -12,6 +12,10 @@ const App = () => {
     countryService.getAll().then((data) => setCountries(data));
   }, []);
 
+  const showCountry = (country) => {
+    setFilter(country.name.common);
+  };
+
   const countriesFound = countries.filter((country) =>
     country.name.common.toLowerCase().includes(filter.toLowerCase())
   );
@@ -28,7 +32,7 @@ const App = () => {
         (count > 10 ? (
           "Too many matches, specify another filter"
         ) : count > 1 ? (
-          <Countries countries={countriesFound} />
+          <Countries countries={countriesFound} showCountry={showCountry} />
         ) : (
           count === 1 && <CountryFull country={countriesFound[0]} />
         ))}

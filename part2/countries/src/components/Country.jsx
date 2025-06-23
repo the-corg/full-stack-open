@@ -1,3 +1,7 @@
-const Country = ({ countryName }) => <div>{countryName}</div>;
+const Country = ({ countryName, onClick }) => (
+  <div>
+    {countryName} <button onClick={onClick}>Show</button>
+  </div>
+);
 
 export default Country;

@@ -1,8 +1,12 @@
 import Country from "./Country";
 
-const Countries = ({ countries }) =>
+const Countries = ({ countries, showCountry }) =>
   countries.map((country) => (
-    <Country key={country.ccn3} countryName={country.name.common} />
+    <Country
+      key={country.name.common}
+      countryName={country.name.common}
+      onClick={() => showCountry(country)}
+    />
   ));
 
 export default Countries;
