@@ -13,12 +13,22 @@ const App = () => {
   }, []);
 
   const showCountry = (country) => {
-    setFilter(country.name.common);
+    let newName = country.name.common;
+    if (
+      countries.filter((c) =>
+        c.name.common.toLowerCase().includes(newName.toLowerCase())
+      ).length > 1
+    )
+      newName += "=";
+    setFilter(newName);
   };
 
-  const countriesFound = countries.filter((country) =>
-    country.name.common.toLowerCase().includes(filter.toLowerCase())
-  );
+  let countriesFound =
+    filter.slice(-1) === "="
+      ? countries.filter((c) => c.name.common === filter.slice(0, -1))
+      : countries.filter((c) =>
+          c.name.common.toLowerCase().includes(filter.toLowerCase())
+        );
 
   const count = countriesFound.length;
 

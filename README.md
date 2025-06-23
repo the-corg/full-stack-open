@@ -23,6 +23,8 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ### d. Altering data in server
 ### e. Adding styles to React app
 - `part2/phonebook`: Exercises 2.6 - 2.17, a simple phonebook app that communicates with a REST API server using Axios and allows filtering, adding, updating, and deleting records
-- `part2/countries`: Exercises 2.18 - 2.20, a simple app that shows information about countries obtained via a REST API
+- `part2/countries`: Exercises 2.18 - 2.20, a simple app that shows information about countries obtained via a REST API, including the current weather in the capital
 
+## Part 3. Programming a server with NodeJS and Express
+### a. Node.js and Express
 In progress...
