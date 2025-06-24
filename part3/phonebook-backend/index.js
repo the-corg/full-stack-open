@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+app.use(express.json());
 
 let persons = [
   {
@@ -56,7 +57,23 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204).end();
 });
 
-const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}\n${new Date().toString()}`);
+const generateId = () => {
+  let newId = "";
+  do newId = String(Math.floor(Math.random() * 1000000000) + 1);
+  while (persons.find((p) => p.id === newId));
+  return newId;
+};
+
+app.post("/api/persons", (request, response) => {
+  const person = request.body;
+
+  person.id = generateId();
+  persons = persons.concat(person);
+
+  response.json(person);
 });
+
+const PORT = 3001;
+app.listen(PORT, () =>
+  console.log(`Server running on port ${PORT}\n${new Date().toString()}`)
+);
