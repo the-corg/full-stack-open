@@ -1,6 +1,12 @@
 const express = require("express");
+const morgan = require("morgan");
+
 const app = express();
 app.use(express.json());
+
+const logger = morgan("tiny");
+
+app.use(logger);
 
 app.use((err, req, res, next) => {
   if (err instanceof SyntaxError && err.status === 400 && "body" in err)
