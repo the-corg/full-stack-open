@@ -27,4 +27,6 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 
 ## Part 3. Programming a server with NodeJS and Express
 ### a. Node.js and Express
+- `part3/phonebook-backend`: Exercises 3.1 - 3.8, a simple Node/Express backend server that provides a REST API for the phonebook app from part 2
+### b. Deploying app to internet
 In progress...

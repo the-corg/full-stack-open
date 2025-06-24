@@ -4,9 +4,10 @@ const morgan = require("morgan");
 const app = express();
 app.use(express.json());
 
-const logger = morgan("tiny");
-
-app.use(logger);
+morgan.token("json", (req, res) => JSON.stringify(req.body));
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :json")
+);
 
 app.use((err, req, res, next) => {
   if (err instanceof SyntaxError && err.status === 400 && "body" in err)
