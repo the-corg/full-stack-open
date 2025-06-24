@@ -2,6 +2,12 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && "body" in err)
+    return errorJson(res, err.message);
+  next();
+});
+
 let persons = [
   {
     id: "1",
@@ -64,10 +70,22 @@ const generateId = () => {
   return newId;
 };
 
-app.post("/api/persons", (request, response) => {
-  const person = request.body;
+const errorJson = (response, message) =>
+  response.status(400).json({ error: message });
 
-  person.id = generateId();
+app.post("/api/persons", (request, response) => {
+  const body = request.body;
+
+  if (!body.name) return errorJson(response, "Name missing");
+  if (!body.number) return errorJson(response, "Number missing");
+  if (persons.find((p) => p.name === body.name))
+    return errorJson(response, "Name must be unique");
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: generateId(),
+  };
   persons = persons.concat(person);
 
   response.json(person);
