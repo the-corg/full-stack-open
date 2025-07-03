@@ -13,34 +13,19 @@ app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :json")
 );
 
-let persons = [
-  {
-    id: "1",
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: "2",
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: "3",
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: "4",
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
+const errorBadRequest = (response, message) =>
+  response.status(400).json({ error: message });
 
-app.get("/api/persons", (request, response) =>
-  Person.find({}).then((result) => response.json(result))
+const errorNotFound = (response, message) =>
+  response.status(404).json({ error: message });
+
+app.get("/api/persons", (request, response, next) =>
+  Person.find({})
+    .then((result) => response.json(result))
+    .catch((error) => next(error))
 );
 
-app.get("/info", (request, response) => {
+/*app.get("/info", (request, response) => {
   const count = persons.length;
   response.send(
     `<p>Phonebook has info for ${count} ${
@@ -59,12 +44,12 @@ app.get("/api/persons/:id", (request, response) => {
     response.statusMessage = `Person with id of ${id} could not be found`;
     response.status(404).end();
   }
-});
+});*/
 
-app.delete("/api/persons/:id", (request, response) =>
-  Person.findByIdAndDelete(request.params.id).then((result) =>
-    response.status(204).end()
-  )
+app.delete("/api/persons/:id", (request, response, next) =>
+  Person.findByIdAndDelete(request.params.id)
+    .then((result) => response.status(204).end())
+    .catch((error) => next(error))
 );
 
 /*const generateId = () => {
@@ -74,14 +59,11 @@ app.delete("/api/persons/:id", (request, response) =>
   return newId;
 };*/
 
-const errorJson = (response, message) =>
-  response.status(400).json({ error: message });
-
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const body = request.body;
 
-  if (!body.name) return errorJson(response, "Name missing");
-  if (!body.number) return errorJson(response, "Number missing");
+  if (!body.name) return errorBadRequest(response, "Name missing");
+  if (!body.number) return errorBadRequest(response, "Number missing");
 
   /*if (persons.find((p) => p.name === body.name))
     return errorJson(response, "Name must be unique");*/
@@ -91,14 +73,30 @@ app.post("/api/persons", (request, response) => {
     number: body.number,
   });
 
-  person.save().then((savedPerson) => response.json(savedPerson));
+  person
+    .save()
+    .then((savedPerson) => response.json(savedPerson))
+    .catch((error) => next(error));
 });
 
-app.use((err, req, res, next) => {
-  if (err instanceof SyntaxError && err.status === 400 && "body" in err)
-    return errorJson(res, err.message);
-  next();
-});
+const unknownEndpoint = (request, response) =>
+  errorNotFound(response, "unknown endpoint");
+
+app.use(unknownEndpoint);
+
+const errorHandler = (error, request, response, next) => {
+  console.error("Error:", error.message);
+
+  if (error.name === "CastError")
+    return errorBadRequest(response, "malformatted id");
+
+  if (error instanceof SyntaxError && error.status === 400 && "body" in error)
+    return errorBadRequest(response, error.message);
+
+  next(error);
+};
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () =>
