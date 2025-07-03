@@ -4,20 +4,14 @@ const morgan = require("morgan");
 const Person = require("./models/person");
 
 const app = express();
-app.use(express.json());
 
 app.use(express.static("dist"));
+app.use(express.json());
 
 morgan.token("json", (req, res) => JSON.stringify(req.body));
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :json")
 );
-
-app.use((err, req, res, next) => {
-  if (err instanceof SyntaxError && err.status === 400 && "body" in err)
-    return errorJson(res, err.message);
-  next();
-});
 
 let persons = [
   {
@@ -67,12 +61,11 @@ app.get("/api/persons/:id", (request, response) => {
   }
 });
 
-app.delete("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  persons = persons.filter((person) => person.id !== id);
-
-  response.status(204).end();
-});
+app.delete("/api/persons/:id", (request, response) =>
+  Person.findByIdAndDelete(request.params.id).then((result) =>
+    response.status(204).end()
+  )
+);
 
 /*const generateId = () => {
   let newId = "";
@@ -99,6 +92,12 @@ app.post("/api/persons", (request, response) => {
   });
 
   person.save().then((savedPerson) => response.json(savedPerson));
+});
+
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && "body" in err)
+    return errorJson(res, err.message);
+  next();
 });
 
 const PORT = process.env.PORT;
