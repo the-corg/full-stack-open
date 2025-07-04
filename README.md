@@ -29,6 +29,9 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ### a. Node.js and Express
 ### b. Deploying app to internet
 ### c. Saving data to MongoDB
-- `part3/phonebook-backend`: Exercises 3.1 - 3.18, a simple Node/Express backend server that provides a REST API that implements the CRUD operations for the phonebook app from part 2 (located in `part3/phonebook-frontend` with a few minor changes); [link to the full stack app deployed on Render](https://phonebook-32qc.onrender.com)
 ### d. Validation and ESLint
+- `part3/phonebook-backend`: Exercises 3.1 - 3.22, a simple Node/Express backend server that uses MongoDB via Mongoose to store data and provides a REST API that implements the CRUD operations for the phonebook app from part 2 (located in `part3/phonebook-frontend` with a few minor changes); [link to the full stack app deployed on Render](https://phonebook-32qc.onrender.com)
+
+## Part 4. Testing Express servers, user administration
+### a. Structure of backend application, introduction to testing
 In progress...
