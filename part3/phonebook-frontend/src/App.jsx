@@ -49,10 +49,11 @@ const App = () => {
               `${returnedPerson.name}'s phone number has been successfully updated`
             );
           })
-          .catch(() => {
+          .catch((error) => {
+            console.log(error.response.data.error);
             messageService.showError(
               setErrorMessage,
-              `${persons[existingIndex].name} was already removed from the server`
+              error.response.data.error
             );
 
             setPersons(persons.filter((p) => p.id !== id));
@@ -61,15 +62,21 @@ const App = () => {
       return;
     }
 
-    personService.create(newPerson).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
-      setNewName("");
-      setNewNumber("");
-      messageService.showNotification(
-        setMessage,
-        `${returnedPerson.name} has been successfully added`
-      );
-    });
+    personService
+      .create(newPerson)
+      .then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName("");
+        setNewNumber("");
+        messageService.showNotification(
+          setMessage,
+          `${returnedPerson.name} has been successfully added`
+        );
+      })
+      .catch((error) => {
+        console.log(error.response.data.error);
+        messageService.showError(setErrorMessage, error.response.data.error);
+      });
   };
 
   const deletePerson = (person) => {
