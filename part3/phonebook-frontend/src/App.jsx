@@ -56,7 +56,7 @@ const App = () => {
               error.response.data.error
             );
 
-            setPersons(persons.filter((p) => p.id !== id));
+            /*setPersons(persons.filter((p) => p.id !== id));*/
           });
       }
       return;

@@ -62,7 +62,8 @@ app.delete("/api/persons/:id", (request, response, next) =>
 app.post("/api/persons", (request, response, next) => {
   const body = request.body;
 
-  if (!body.number) return errorBadRequest(response, "Number missing");
+  /*if (!body.name) return errorBadRequest(response, "Name missing");
+  if (!body.number) return errorBadRequest(response, "Number missing");*/
 
   const person = new Person({
     name: body.name,
