@@ -25,26 +25,26 @@ app.get("/api/persons", (request, response, next) =>
     .catch((error) => next(error))
 );
 
-/*app.get("/info", (request, response) => {
-  const count = persons.length;
-  response.send(
-    `<p>Phonebook has info for ${count} ${
-      count === 1 ? "person" : "people"
-    }</p><p>${new Date().toString()}</p>`
-  );
-});
+app.get("/info", (request, response, next) =>
+  Person.countDocuments({})
+    .then((result) =>
+      response.send(
+        `<p>Phonebook has info for ${result} ${
+          result === 1 ? "person" : "people"
+        }</p><p>${new Date().toString()}</p>`
+      )
+    )
+    .catch((error) => next(error))
+);
 
-app.get("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  const person = persons.find((person) => person.id === id);
-
-  if (person) {
-    response.json(person);
-  } else {
-    response.statusMessage = `Person with id of ${id} could not be found`;
-    response.status(404).end();
-  }
-});*/
+app.get("/api/persons/:id", (request, response, next) =>
+  Person.findById(request.params.id)
+    .then((person) => {
+      if (person) response.json(person);
+      else return errorNotFound(response, "Person not found");
+    })
+    .catch((error) => next(error))
+);
 
 app.delete("/api/persons/:id", (request, response, next) =>
   Person.findByIdAndDelete(request.params.id)
