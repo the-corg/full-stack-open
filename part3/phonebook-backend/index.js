@@ -65,9 +65,6 @@ app.post("/api/persons", (request, response, next) => {
   if (!body.name) return errorBadRequest(response, "Name missing");
   if (!body.number) return errorBadRequest(response, "Number missing");
 
-  /*if (persons.find((p) => p.name === body.name))
-    return errorJson(response, "Name must be unique");*/
-
   const person = new Person({
     name: body.name,
     number: body.number,
@@ -79,8 +76,25 @@ app.post("/api/persons", (request, response, next) => {
     .catch((error) => next(error));
 });
 
+app.put("/api/persons/:id", (request, response, next) => {
+  const { name, number } = request.body;
+
+  Person.findById(request.params.id)
+    .then((person) => {
+      if (!person) return errorNotFound(response, "Person not found");
+
+      person.name = name;
+      person.number = number;
+
+      return person
+        .save()
+        .then((updatedPerson) => response.json(updatedPerson));
+    })
+    .catch((error) => next(error));
+});
+
 const unknownEndpoint = (request, response) =>
-  errorNotFound(response, "unknown endpoint");
+  errorNotFound(response, "Unknown endpoint");
 
 app.use(unknownEndpoint);
 
