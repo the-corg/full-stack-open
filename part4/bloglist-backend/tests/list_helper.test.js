@@ -1,6 +1,6 @@
-const { test, describe } = require('node:test')
-const assert = require('node:assert')
-const listHelper = require('../utils/list_helper')
+const { test, describe } = require('node:test');
+const assert = require('node:assert');
+const listHelper = require('../utils/list_helper');
 
 const listWithOneBlog = [
   {
@@ -11,7 +11,7 @@ const listWithOneBlog = [
     likes: 5,
     __v: 0,
   },
-]
+];
 
 const listWithManyBlogs = [
   {
@@ -62,35 +62,52 @@ const listWithManyBlogs = [
     likes: 2,
     __v: 0,
   },
-]
+];
 
 describe('dummy', () =>
-  test('returns one', () => assert.strictEqual(listHelper.dummy([]), 1)))
+  test('returns one', () => assert.strictEqual(listHelper.dummy([]), 1)));
 
 describe('total likes', () => {
   test('of empty list is zero', () =>
-    assert.strictEqual(listHelper.totalLikes([]), 0))
+    assert.strictEqual(listHelper.totalLikes([]), 0));
 
   test('when list has only one blog, equals the likes of that', () =>
-    assert.strictEqual(listHelper.totalLikes(listWithOneBlog), 5))
+    assert.strictEqual(listHelper.totalLikes(listWithOneBlog), 5));
 
   test('of a bigger list is calculated right', () =>
-    assert.strictEqual(listHelper.totalLikes(listWithManyBlogs), 36))
-})
+    assert.strictEqual(listHelper.totalLikes(listWithManyBlogs), 36));
+});
 
-describe('favorite blog ', () => {
+describe('favorite blog', () => {
   test('of empty list is undefined', () =>
-    assert.deepStrictEqual(listHelper.favoriteBlog([]), undefined))
+    assert.deepStrictEqual(listHelper.favoriteBlog([]), undefined));
 
   test('when list has only one blog, equals that blog', () =>
     assert.deepStrictEqual(
       listHelper.favoriteBlog(listWithOneBlog),
       listWithOneBlog[0]
-    ))
+    ));
 
   test('of a bigger list is calculated right', () =>
     assert.deepStrictEqual(
       listHelper.favoriteBlog(listWithManyBlogs),
       listWithManyBlogs[2]
-    ))
-})
+    ));
+});
+
+describe('most blogs', () => {
+  test('of empty list is undefined', () =>
+    assert.deepStrictEqual(listHelper.mostBlogs([]), undefined));
+
+  test('when list has only one blog, equals the author of that blog', () =>
+    assert.deepStrictEqual(listHelper.mostBlogs(listWithOneBlog), {
+      author: listWithOneBlog[0].author,
+      blogs: 1,
+    }));
+
+  test('of a bigger list is calculated right', () =>
+    assert.deepStrictEqual(listHelper.mostBlogs(listWithManyBlogs), {
+      author: 'Robert C. Martin',
+      blogs: 3,
+    }));
+});
