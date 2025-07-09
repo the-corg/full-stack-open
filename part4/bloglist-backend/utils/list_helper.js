@@ -2,7 +2,7 @@ const blog = require('../models/blog');
 
 const dummy = blogs => 1;
 
-const totalLikes = blogs => blogs.reduce((sum, blog) => sum + blog.likes, 0);
+const totalLikes = blogs => blogs.reduce((sum, { likes }) => sum + likes, 0);
 
 const favoriteBlog = blogs =>
   blogs.reduce((max, blog) => (max.likes < blog.likes ? blog : max), blogs[0]);
@@ -10,16 +10,12 @@ const favoriteBlog = blogs =>
 const mostBlogs = blogs =>
   Object.entries(
     blogs.reduce(
-      (dict, blog) => (
-        (dict[blog.author] = (dict[blog.author] || 0) + 1), dict
-      ),
+      (dict, { author }) => ((dict[author] = (dict[author] || 0) + 1), dict),
       {}
     )
   ).reduce(
-    (max, current) =>
-      current[1] > (max?.blogs ?? 0)
-        ? { author: current[0], blogs: current[1] }
-        : max,
+    (max, [author, blogs]) =>
+      blogs > (max?.blogs ?? 0) ? { author, blogs } : max,
     undefined
   );
 
@@ -42,9 +38,24 @@ const mostBlogs = blogs =>
   return max
 }*/
 
+const mostLikes = blogs =>
+  Object.entries(
+    blogs.reduce(
+      (dict, { author, likes }) => (
+        (dict[author] = (dict[author] || 0) + likes), dict
+      ),
+      {}
+    )
+  ).reduce(
+    (max, [author, likes]) =>
+      likes > (max?.likes ?? 0) ? { author, likes } : max,
+    undefined
+  );
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };
