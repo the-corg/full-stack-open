@@ -78,7 +78,7 @@ test('all blogs are returned', async () => {
 test('a specific blog is within the returned blogs', async () => {
   const response = await api.get('/api/blogs');
 
-  const titles = response.body.map(e => e.title);
+  const titles = response.body.map(blog => blog.title);
   assert(titles.includes('Canonical string reduction'));
 });
 
@@ -88,6 +88,28 @@ test('the unique identifier property of the blog posts is named id and not _id',
   const blogs = response.body;
   assert('id' in blogs[0]);
   assert(!('_id' in blogs[0]));
+});
+
+test('a valid blog can be added ', async () => {
+  const newBlog = {
+    title: 'Exploits of a Mom',
+    author: 'xkcd',
+    url: 'https://xkcd.com/327/',
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const response = await api.get('/api/blogs');
+
+  const titles = response.body.map(blog => blog.title);
+
+  assert.strictEqual(response.body.length, initialBlogs.length + 1);
+
+  assert(titles.includes('Exploits of a Mom'));
 });
 
 after(async () => await mongoose.connection.close());
