@@ -132,4 +132,22 @@ test('if the likes property is missing, it defaults to 0', async () => {
   assert.strictEqual(addedBlog.likes, 0);
 });
 
+test('if the title property is missing, the backend responds with the status code 400 Bad Request', async () => {
+  const newBlog = {
+    author: 'xkcd',
+    url: 'https://xkcd.com/327/',
+  };
+
+  await api.post('/api/blogs').send(newBlog).expect(400);
+});
+
+test('if the url property is missing, the backend responds with the status code 400 Bad Request', async () => {
+  const newBlog = {
+    title: 'Exploits of a Mom',
+    author: 'xkcd',
+  };
+
+  await api.post('/api/blogs').send(newBlog).expect(400);
+});
+
 after(async () => await mongoose.connection.close());
