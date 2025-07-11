@@ -67,62 +67,62 @@ const listWithManyBlogs = [
 describe('dummy', () =>
   test('returns one', () => assert.strictEqual(listHelper.dummy([]), 1)));
 
-describe('total likes', () => {
-  test('of empty list is zero', () =>
+describe('the total likes', () => {
+  test('equals zero for an empty list', () =>
     assert.strictEqual(listHelper.totalLikes([]), 0));
 
-  test('when list has only one blog, equals the likes of that', () =>
+  test('equals the likes of the single blog, when the list has only one blog', () =>
     assert.strictEqual(listHelper.totalLikes(listWithOneBlog), 5));
 
-  test('of a bigger list is calculated right', () =>
+  test('is calculated correctly for a bigger list', () =>
     assert.strictEqual(listHelper.totalLikes(listWithManyBlogs), 36));
 });
 
-describe('favorite blog', () => {
-  test('of empty list is undefined', () =>
+describe('the favorite blog', () => {
+  test('is undefined for an empty list', () =>
     assert.deepStrictEqual(listHelper.favoriteBlog([]), undefined));
 
-  test('when list has only one blog, equals that blog', () =>
+  test('is the single blog, when the list has only one blog', () =>
     assert.deepStrictEqual(
       listHelper.favoriteBlog(listWithOneBlog),
       listWithOneBlog[0]
     ));
 
-  test('of a bigger list is calculated right', () =>
+  test('is calculated correctly for a bigger list', () =>
     assert.deepStrictEqual(
       listHelper.favoriteBlog(listWithManyBlogs),
       listWithManyBlogs[2]
     ));
 });
 
-describe('most blogs', () => {
-  test('of empty list is undefined', () =>
+describe('the author with the most blogs', () => {
+  test('is undefined for an empty list', () =>
     assert.deepStrictEqual(listHelper.mostBlogs([]), undefined));
 
-  test('when list has only one blog, equals the author of that blog', () =>
+  test('is the author of the single blog, when the list has only one blog', () =>
     assert.deepStrictEqual(listHelper.mostBlogs(listWithOneBlog), {
       author: listWithOneBlog[0].author,
       blogs: 1,
     }));
 
-  test('of a bigger list is calculated right', () =>
+  test('is calculated correctly for a bigger list', () =>
     assert.deepStrictEqual(listHelper.mostBlogs(listWithManyBlogs), {
       author: 'Robert C. Martin',
       blogs: 3,
     }));
 });
 
-describe('most likes', () => {
-  test('of empty list is undefined', () =>
+describe('the author with the most likes', () => {
+  test('is undefined for an empty list', () =>
     assert.deepStrictEqual(listHelper.mostLikes([]), undefined));
 
-  test('when list has only one blog, equals the author of that blog', () =>
+  test('is the author of the single blog, when the list has only one blog', () =>
     assert.deepStrictEqual(listHelper.mostLikes(listWithOneBlog), {
       author: listWithOneBlog[0].author,
       likes: listWithOneBlog[0].likes,
     }));
 
-  test('of a bigger list is calculated right', () =>
+  test('is calculated correctly for a bigger list', () =>
     assert.deepStrictEqual(listHelper.mostLikes(listWithManyBlogs), {
       author: 'Edsger W. Dijkstra',
       likes: 17,

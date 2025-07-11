@@ -34,6 +34,7 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 
 ## Part 4. Testing Express servers, user administration
 ### a. Structure of backend application, introduction to testing
-- `part4/bloglist-backend`: Exercises 4.1 - 4.7, unit testing and integration testing for a simple backend application
 ### b. Testing the backend
+- `part4/bloglist-backend`: Exercises 4.1 - 4.14, unit testing and integration testing for a simple backend application
+### c. User administration
 In progress...
