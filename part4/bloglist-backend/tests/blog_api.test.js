@@ -60,10 +60,7 @@ const initialBlogs = [
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-  for (const blog of initialBlogs) {
-    const blogObject = new Blog(blog);
-    await blogObject.save();
-  }
+  await Blog.insertMany(initialBlogs);
 });
 
 test('blogs are returned as json', async () =>
@@ -81,8 +78,16 @@ test('all blogs are returned', async () => {
 test('a specific blog is within the returned blogs', async () => {
   const response = await api.get('/api/blogs');
 
-  const title = response.body.map(e => e.title);
-  assert(title.includes('Canonical string reduction'));
+  const titles = response.body.map(e => e.title);
+  assert(titles.includes('Canonical string reduction'));
+});
+
+test('the unique identifier property of the blog posts is named id and not _id', async () => {
+  const response = await api.get('/api/blogs');
+
+  const blogs = response.body;
+  assert('id' in blogs[0]);
+  assert(!('_id' in blogs[0]));
 });
 
 after(async () => await mongoose.connection.close());
