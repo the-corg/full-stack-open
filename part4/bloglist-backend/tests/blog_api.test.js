@@ -90,7 +90,7 @@ test('the unique identifier property of the blog posts is named id and not _id',
   assert(!('_id' in blogs[0]));
 });
 
-test('a valid blog can be added ', async () => {
+test('a valid blog can be added', async () => {
   const newBlog = {
     title: 'Exploits of a Mom',
     author: 'xkcd',
@@ -110,6 +110,26 @@ test('a valid blog can be added ', async () => {
   assert.strictEqual(response.body.length, initialBlogs.length + 1);
 
   assert(titles.includes('Exploits of a Mom'));
+});
+
+test('if the likes property is missing, it defaults to 0', async () => {
+  const newBlog = {
+    title: 'Exploits of a Mom',
+    author: 'xkcd',
+    url: 'https://xkcd.com/327/',
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const response = await api.get('/api/blogs');
+
+  const addedBlog = response.body.find(b => b.title === 'Exploits of a Mom');
+
+  assert.strictEqual(addedBlog.likes, 0);
 });
 
 after(async () => await mongoose.connection.close());
