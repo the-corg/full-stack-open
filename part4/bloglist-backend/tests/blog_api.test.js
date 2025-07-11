@@ -1,4 +1,4 @@
-const { test, after, beforeEach } = require('node:test');
+const { test, describe, after, beforeEach } = require('node:test');
 const assert = require('node:assert');
 const mongoose = require('mongoose');
 const supertest = require('supertest');
@@ -58,96 +58,120 @@ const initialBlogs = [
   },
 ];
 
-beforeEach(async () => {
-  await Blog.deleteMany({});
-  await Blog.insertMany(initialBlogs);
-});
+describe('integration testing', () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({});
+    await Blog.insertMany(initialBlogs);
+  });
 
-test('blogs are returned as json', async () =>
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/));
+  test('blogs are returned as json', async () =>
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/));
 
-test('all blogs are returned', async () => {
-  const response = await api.get('/api/blogs');
+  test('all blogs are returned', async () => {
+    const response = await api.get('/api/blogs');
 
-  assert.strictEqual(response.body.length, initialBlogs.length);
-});
+    assert.strictEqual(response.body.length, initialBlogs.length);
+  });
 
-test('a specific blog is within the returned blogs', async () => {
-  const response = await api.get('/api/blogs');
+  test('a specific blog is within the returned blogs', async () => {
+    const response = await api.get('/api/blogs');
 
-  const titles = response.body.map(blog => blog.title);
-  assert(titles.includes('Canonical string reduction'));
-});
+    const titles = response.body.map(blog => blog.title);
+    assert(titles.includes('Canonical string reduction'));
+  });
 
-test('the unique identifier property of the blog posts is named id and not _id', async () => {
-  const response = await api.get('/api/blogs');
+  test('the unique identifier property of the blog posts is named id and not _id', async () => {
+    const response = await api.get('/api/blogs');
 
-  const blogs = response.body;
-  assert('id' in blogs[0]);
-  assert(!('_id' in blogs[0]));
-});
+    const blogs = response.body;
+    assert('id' in blogs[0]);
+    assert(!('_id' in blogs[0]));
+  });
 
-test('a valid blog can be added', async () => {
-  const newBlog = {
-    title: 'Exploits of a Mom',
-    author: 'xkcd',
-    url: 'https://xkcd.com/327/',
-  };
+  describe('adding...', () => {
+    test('a valid blog can be added', async () => {
+      const newBlog = {
+        title: 'Exploits of a Mom',
+        author: 'xkcd',
+        url: 'https://xkcd.com/327/',
+      };
 
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/);
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
 
-  const response = await api.get('/api/blogs');
+      const response = await api.get('/api/blogs');
 
-  const titles = response.body.map(blog => blog.title);
+      const titles = response.body.map(blog => blog.title);
 
-  assert.strictEqual(response.body.length, initialBlogs.length + 1);
+      assert.strictEqual(response.body.length, initialBlogs.length + 1);
 
-  assert(titles.includes('Exploits of a Mom'));
-});
+      assert(titles.includes('Exploits of a Mom'));
+    });
 
-test('if the likes property is missing, it defaults to 0', async () => {
-  const newBlog = {
-    title: 'Exploits of a Mom',
-    author: 'xkcd',
-    url: 'https://xkcd.com/327/',
-  };
+    test('if the likes property is missing, it defaults to 0', async () => {
+      const newBlog = {
+        title: 'Exploits of a Mom',
+        author: 'xkcd',
+        url: 'https://xkcd.com/327/',
+      };
 
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/);
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
 
-  const response = await api.get('/api/blogs');
+      const response = await api.get('/api/blogs');
 
-  const addedBlog = response.body.find(b => b.title === 'Exploits of a Mom');
+      const addedBlog = response.body.find(
+        b => b.title === 'Exploits of a Mom'
+      );
 
-  assert.strictEqual(addedBlog.likes, 0);
-});
+      assert.strictEqual(addedBlog.likes, 0);
+    });
 
-test('if the title property is missing, the backend responds with the status code 400 Bad Request', async () => {
-  const newBlog = {
-    author: 'xkcd',
-    url: 'https://xkcd.com/327/',
-  };
+    test('if the title property is missing, the backend responds with the status code 400 Bad Request', async () => {
+      const newBlog = {
+        author: 'xkcd',
+        url: 'https://xkcd.com/327/',
+      };
 
-  await api.post('/api/blogs').send(newBlog).expect(400);
-});
+      await api.post('/api/blogs').send(newBlog).expect(400);
+    });
 
-test('if the url property is missing, the backend responds with the status code 400 Bad Request', async () => {
-  const newBlog = {
-    title: 'Exploits of a Mom',
-    author: 'xkcd',
-  };
+    test('if the url property is missing, the backend responds with the status code 400 Bad Request', async () => {
+      const newBlog = {
+        title: 'Exploits of a Mom',
+        author: 'xkcd',
+      };
 
-  await api.post('/api/blogs').send(newBlog).expect(400);
+      await api.post('/api/blogs').send(newBlog).expect(400);
+    });
+  });
+
+  describe('deleting...', () => {
+    test('succeeds with status code 204 if id is valid', async () => {
+      const responseAtStart = await api.get('/api/blogs');
+      const blogsAtStart = responseAtStart.body;
+      const blogToDelete = blogsAtStart[0];
+
+      await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+      const responseAtEnd = await api.get('/api/blogs');
+      const blogsAtEnd = responseAtEnd.body;
+
+      const titles = blogsAtEnd.map(blog => blog.title);
+      assert(!titles.includes(blogToDelete.title));
+
+      assert.strictEqual(blogsAtEnd.length, initialBlogs.length - 1);
+    });
+  });
 });
 
 after(async () => await mongoose.connection.close());
