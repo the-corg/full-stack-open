@@ -3,6 +3,8 @@ const assert = require('node:assert');
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const Blog = require('../models/blog');
+const bcrypt = require('bcrypt');
+const User = require('../models/user');
 const app = require('../app');
 
 const api = supertest(app);
@@ -237,6 +239,165 @@ describe('integration testing', () => {
       assert.strictEqual(blogsAtEnd.length, blogsAtStart.length);
       assert.strictEqual(updatedBlog.likes, 0);
     });
+  });
+});
+
+describe('when there is initially one user in the database', () => {
+  beforeEach(async () => {
+    await User.deleteMany({});
+
+    const passwordHash = await bcrypt.hash('password123', 10);
+    const user = new User({ username: 'root', passwordHash });
+
+    await user.save();
+  });
+
+  test('creation of a new user succeeds', async () => {
+    const responseAtStart = await api.get('/api/users');
+    const usersAtStart = responseAtStart.body;
+
+    const newUser = {
+      username: 't800',
+      name: 'Arnold Schwarzenegger',
+      password: 'xxx',
+    };
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const responseAtEnd = await api.get('/api/users');
+    const usersAtEnd = responseAtEnd.body;
+
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1);
+
+    const usernames = usersAtEnd.map(u => u.username);
+    assert(usernames.includes(newUser.username));
+  });
+
+  test('creation fails with the correct status code and message if the username is already taken', async () => {
+    const responseAtStart = await api.get('/api/users');
+    const usersAtStart = responseAtStart.body;
+
+    const newUser = {
+      username: 'root',
+      name: 'Arnold Schwarzenegger',
+      password: 'hastalavistababy',
+    };
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const responseAtEnd = await api.get('/api/users');
+    const usersAtEnd = responseAtEnd.body;
+
+    assert(result.body.error.includes('expected `username` to be unique'));
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length);
+  });
+
+  test('creation fails with the correct status code and message if the username is missing', async () => {
+    const responseAtStart = await api.get('/api/users');
+    const usersAtStart = responseAtStart.body;
+
+    const newUser = {
+      name: 'Arnold Schwarzenegger',
+      password: 'hastalavistababy',
+    };
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const responseAtEnd = await api.get('/api/users');
+    const usersAtEnd = responseAtEnd.body;
+
+    assert(result.body.error.includes('`username` is required'));
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length);
+  });
+
+  test('creation fails with the correct status code and message if the password is missing', async () => {
+    const responseAtStart = await api.get('/api/users');
+    const usersAtStart = responseAtStart.body;
+
+    const newUser = {
+      username: 't800',
+      name: 'Arnold Schwarzenegger',
+    };
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const responseAtEnd = await api.get('/api/users');
+    const usersAtEnd = responseAtEnd.body;
+
+    assert(result.body.error.includes('`password` is required'));
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length);
+  });
+
+  test('creation fails with the correct status code and message if the username is shorter than 3 characters', async () => {
+    const responseAtStart = await api.get('/api/users');
+    const usersAtStart = responseAtStart.body;
+
+    const newUser = {
+      username: 'tt',
+      name: 'Arnold Schwarzenegger',
+      password: 'hastalavistababy',
+    };
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const responseAtEnd = await api.get('/api/users');
+    const usersAtEnd = responseAtEnd.body;
+
+    assert(
+      result.body.error.includes(
+        '`username` (`' +
+          newUser.username +
+          '`) is shorter than the minimum allowed length (3)'
+      )
+    );
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length);
+  });
+
+  test('creation fails with the correct status code and message if the password is shorter than 3 characters', async () => {
+    const responseAtStart = await api.get('/api/users');
+    const usersAtStart = responseAtStart.body;
+
+    const newUser = {
+      username: 't800',
+      name: 'Arnold Schwarzenegger',
+      password: 'pw',
+    };
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const responseAtEnd = await api.get('/api/users');
+    const usersAtEnd = responseAtEnd.body;
+
+    assert(
+      result.body.error.includes(
+        '`password` is shorter than the minimum allowed length (3)'
+      )
+    );
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length);
   });
 });
 
