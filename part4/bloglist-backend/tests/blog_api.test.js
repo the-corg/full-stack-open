@@ -62,6 +62,11 @@ const initialBlogs = [
 
 describe('integration testing', () => {
   beforeEach(async () => {
+    await User.deleteMany({});
+    const passwordHash = await bcrypt.hash('password123', 10);
+    const user = new User({ username: 'root', passwordHash });
+    await user.save();
+
     await Blog.deleteMany({});
     await Blog.insertMany(initialBlogs);
   });
