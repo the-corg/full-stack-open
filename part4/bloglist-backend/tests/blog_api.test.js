@@ -60,15 +60,24 @@ const initialBlogs = [
   },
 ];
 
+let token = '';
+
 describe('integration testing', () => {
   beforeEach(async () => {
     await User.deleteMany({});
-    const passwordHash = await bcrypt.hash('password123', 10);
-    const user = new User({ username: 'root', passwordHash });
+    const password = 'password123';
+    const username = 'root';
+    const passwordHash = await bcrypt.hash(password, 10);
+    const user = new User({ username, passwordHash });
     await user.save();
 
     await Blog.deleteMany({});
     await Blog.insertMany(initialBlogs);
+
+    const loginResponse = await api
+      .post('/api/login')
+      .send({ username, password });
+    token = loginResponse.body.token;
   });
 
   test('blogs are returned as json', async () =>
@@ -109,6 +118,7 @@ describe('integration testing', () => {
       await api
         .post('/api/blogs')
         .send(newBlog)
+        .set({ Authorization: `Bearer ${token}` })
         .expect(201)
         .expect('Content-Type', /application\/json/);
 
@@ -118,7 +128,20 @@ describe('integration testing', () => {
 
       assert.strictEqual(response.body.length, initialBlogs.length + 1);
 
-      assert(titles.includes('Exploits of a Mom'));
+      assert(titles.includes(newBlog.title));
+    });
+
+    test('fails with the status code 401 Unauthorized if a token is not provided', async () => {
+      const newBlog = {
+        title: 'Exploits of a Mom',
+        author: 'xkcd',
+        url: 'https://xkcd.com/327/',
+      };
+
+      await api.post('/api/blogs').send(newBlog).expect(401);
+
+      const response = await api.get('/api/blogs');
+      assert.strictEqual(response.body.length, initialBlogs.length);
     });
 
     test('if the likes property is missing, it defaults to 0', async () => {
@@ -131,13 +154,14 @@ describe('integration testing', () => {
       await api
         .post('/api/blogs')
         .send(newBlog)
+        .set({ Authorization: `Bearer ${token}` })
         .expect(201)
         .expect('Content-Type', /application\/json/);
 
       const response = await api.get('/api/blogs');
 
       const addedBlog = response.body.find(
-        blog => blog.title === 'Exploits of a Mom'
+        blog => blog.title === newBlog.title
       );
 
       assert.strictEqual(addedBlog.likes, 0);
@@ -149,7 +173,11 @@ describe('integration testing', () => {
         url: 'https://xkcd.com/327/',
       };
 
-      await api.post('/api/blogs').send(newBlog).expect(400);
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .set({ Authorization: `Bearer ${token}` })
+        .expect(400);
     });
 
     test('if the url property is missing, the backend responds with the status code 400 Bad Request', async () => {
@@ -158,17 +186,40 @@ describe('integration testing', () => {
         author: 'xkcd',
       };
 
-      await api.post('/api/blogs').send(newBlog).expect(400);
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .set({ Authorization: `Bearer ${token}` })
+        .expect(400);
     });
   });
 
   describe('deleting...', () => {
     test('succeeds with the status code 204 if the id is valid', async () => {
+      const newBlog = {
+        title: 'Exploits of a Mom',
+        author: 'xkcd',
+        url: 'https://xkcd.com/327/',
+      };
+
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .set({ Authorization: `Bearer ${token}` })
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+
       const responseAtStart = await api.get('/api/blogs');
       const blogsAtStart = responseAtStart.body;
-      const blogToDelete = blogsAtStart[0];
 
-      await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+      const blogToDelete = blogsAtStart.find(
+        blog => blog.title === newBlog.title
+      );
+
+      await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .set({ Authorization: `Bearer ${token}` })
+        .expect(204);
 
       const responseAtEnd = await api.get('/api/blogs');
       const blogsAtEnd = responseAtEnd.body;
@@ -176,7 +227,7 @@ describe('integration testing', () => {
       const titles = blogsAtEnd.map(blog => blog.title);
       assert(!titles.includes(blogToDelete.title));
 
-      assert.strictEqual(blogsAtEnd.length, initialBlogs.length - 1);
+      assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1);
     });
   });
 

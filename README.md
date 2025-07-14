@@ -39,4 +39,6 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ### d. Token authentication
 - `part4/bloglist-backend`: Exercises 4.1 - 4.23, a simple backend application that allows for user authentication and authorization and is tested using both unit testing and integration testing
 
+## Part 5. Testing React apps
+### a. Login in frontend
 In progress...
