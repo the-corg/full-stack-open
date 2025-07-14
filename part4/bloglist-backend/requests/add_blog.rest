@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjY4NzQyMjVlMjM3Zjc1MjFjNDkyZWYxMSIsImlhdCI6MTc1MjQ0MTUxMH0.ZwYyBdq0QiWzT9khAaigo3gDaAJTgfgYdoKTlFWN7uI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJpY2siLCJpZCI6IjY4NzJhOGRlMmUwYjhmNmRlZGZiM2Q1ZSIsImlhdCI6MTc1MjUxMjI3MywiZXhwIjoxNzUyNTEyMzMzfQ.rua6StyKkpoYb5GsSt6gBUp0EmF-e7tSRpnKEs9Lj74
 
 {
   "title": "Test_blog1234",
