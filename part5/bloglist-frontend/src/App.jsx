@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import LoginForm from './components/LoginForm';
 import Blog from './components/Blog';
+import Notification from './components/Notification';
 import blogService from './services/blogs';
+import messageService from './services/messages';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -10,6 +12,9 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
+
+  const [message, setMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs(blogs));
@@ -46,8 +51,13 @@ const App = () => {
       setTitle('');
       setAuthor('');
       setUrl('');
+      messageService.showNotification(
+        setMessage,
+        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
+      );
     } catch (exception) {
       console.log(exception.response.data.error);
+      messageService.showError(setErrorMessage, exception.response.data.error);
     }
   };
 
@@ -56,6 +66,8 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification message={message} />
+      <Notification message={errorMessage} isError='true' />
       <p>
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </p>
