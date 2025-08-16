@@ -39,6 +39,7 @@ const App = () => {
   const addBlog = async newBlog => {
     try {
       const returnedBlog = await blogService.create(newBlog);
+      returnedBlog.user = user;
       setBlogs(blogs.concat(returnedBlog));
 
       messageService.showNotification(
@@ -52,6 +53,25 @@ const App = () => {
       messageService.showError(setErrorMessage, exception.response.data.error);
     }
     return false;
+  };
+
+  const likeBlog = async blog => {
+    try {
+      const returnedBlog = await blogService.like(blog);
+
+      returnedBlog.user = { ...blog.user };
+
+      const newBlogs = [
+        ...blogs.slice(0, blogs.indexOf(blog)),
+        returnedBlog,
+        ...blogs.slice(blogs.indexOf(blog) + 1),
+      ];
+
+      setBlogs(newBlogs);
+    } catch (exception) {
+      console.log(exception);
+      messageService.showError(setErrorMessage, exception.response.data.error);
+    }
   };
 
   if (!user) return <LoginForm setUser={setUser} />;
@@ -68,7 +88,11 @@ const App = () => {
         <CreateForm addBlog={addBlog} />
       </Togglable>
       {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          likeBlog={async () => await likeBlog(blog)}
+        />
       ))}
     </div>
   );
