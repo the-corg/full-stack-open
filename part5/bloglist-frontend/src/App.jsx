@@ -74,6 +74,20 @@ const App = () => {
     }
   };
 
+  const deleteBlog = async blog => {
+    if (blog.author === '') blog.author = 'Unknown author';
+    if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) return;
+
+    try {
+      await blogService.remove(blog);
+
+      setBlogs(blogs.filter(b => b.id !== blog.id));
+    } catch (exception) {
+      console.log(exception);
+      messageService.showError(setErrorMessage, exception.response.data.error);
+    }
+  };
+
   if (!user) return <LoginForm setUser={setUser} />;
 
   return (
@@ -94,6 +108,11 @@ const App = () => {
             key={blog.id}
             blog={blog}
             likeBlog={async () => await likeBlog(blog)}
+            deleteBlog={
+              blog.user?.username === user.username
+                ? async () => await deleteBlog(blog)
+                : undefined
+            }
           />
         ))}
     </div>

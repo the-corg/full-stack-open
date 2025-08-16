@@ -29,4 +29,12 @@ const like = async object => {
   return response.data;
 };
 
-export default { getAll, create, setToken, like };
+const remove = async object => {
+  const config = {
+    headers: { Authorization: token },
+  };
+
+  await axios.delete(`${baseUrl}/${object.id}`, config);
+};
+
+export default { getAll, create, setToken, like, remove };
