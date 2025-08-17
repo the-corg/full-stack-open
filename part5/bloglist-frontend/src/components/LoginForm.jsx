@@ -3,6 +3,7 @@ import Notification from './Notification';
 import loginService from '../services/login';
 import blogService from '../services/blogs';
 import messageService from '../services/messages';
+import PropTypes from 'prop-types';
 
 const LoginForm = ({ setUser }) => {
   const [username, setUsername] = useState('');
@@ -52,6 +53,10 @@ const LoginForm = ({ setUser }) => {
       </form>
     </div>
   );
+};
+
+LoginForm.PropTypes = {
+  setUser: PropTypes.func.isRequired,
 };
 
 export default LoginForm;
