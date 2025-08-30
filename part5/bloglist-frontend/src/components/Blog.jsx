@@ -16,7 +16,7 @@ const Blog = ({ blog, likeBlog, deleteBlog }) => {
   const showWhenDetailed = { display: detailed ? '' : 'none' };
 
   return (
-    <div style={blogStyle}>
+    <div className='blog' style={blogStyle}>
       <div>
         {blog.title} {blog.author}{' '}
         <button onClick={toggleDetailed}>{detailed ? 'hide' : 'show'}</button>
@@ -28,7 +28,12 @@ const Blog = ({ blog, likeBlog, deleteBlog }) => {
           likes {blog.likes} <button onClick={likeBlog}>like</button>
         </div>
         <div>{blog.user?.name ?? 'Unknown user'}</div>
-        <button style={{ display: deleteBlog ? '' : 'none' }} onClick={deleteBlog}>remove</button>
+        <button
+          style={{ display: deleteBlog ? '' : 'none' }}
+          onClick={deleteBlog}
+        >
+          remove
+        </button>
       </div>
     </div>
   );
