@@ -19,31 +19,40 @@ const CreateForm = ({ addBlog }) => {
       <h2>create new</h2>
       <form onSubmit={createNewBlog}>
         <div>
-          title:{' '}
-          <input
-            value={title}
-            type='text'
-            name='Title'
-            onChange={({ target }) => setTitle(target.value)}
-          />
+          <label>
+            title:{' '}
+            <input
+              value={title}
+              type='text'
+              name='Title'
+              onChange={({ target }) => setTitle(target.value)}
+              placeholder='title of the blog'
+            />
+          </label>
         </div>
         <div>
-          author:{' '}
-          <input
-            value={author}
-            type='text'
-            name='Author'
-            onChange={({ target }) => setAuthor(target.value)}
-          />
+          <label>
+            author:{' '}
+            <input
+              value={author}
+              type='text'
+              name='Author'
+              onChange={({ target }) => setAuthor(target.value)}
+              placeholder='author of the blog (optional)'
+            />
+          </label>
         </div>
         <div>
-          url:{' '}
-          <input
-            value={url}
-            type='text'
-            name='Url'
-            onChange={({ target }) => setUrl(target.value)}
-          />
+          <label>
+            url:{' '}
+            <input
+              value={url}
+              type='text'
+              name='Url'
+              onChange={({ target }) => setUrl(target.value)}
+              placeholder='URL of the blog'
+            />
+          </label>
         </div>
         <div>
           <button type='submit'>create</button>

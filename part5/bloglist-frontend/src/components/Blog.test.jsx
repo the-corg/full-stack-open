@@ -3,6 +3,8 @@ import userEvent from '@testing-library/user-event';
 import Blog from './Blog';
 
 describe('<Blog />', () => {
+  const mockLikeHandler = vi.fn();
+
   beforeEach(() => {
     const blog = {
       title: 'Component testing with react-testing-library',
@@ -10,7 +12,7 @@ describe('<Blog />', () => {
       url: 'https:/example.com',
     };
 
-    render(<Blog blog={blog} />);
+    render(<Blog blog={blog} likeBlog={mockLikeHandler} />);
   });
 
   test('renders the title by default', () => {
@@ -56,5 +58,14 @@ describe('<Blog />', () => {
 
     const element = screen.getByText('likes', { exact: false });
     expect(element).toBeVisible();
+  });
+
+  test('if the "like" button is clicked twice, the corresponding event handler is called twice', async () => {
+    const user = userEvent.setup();
+    const button = screen.getByText('like');
+    await user.click(button);
+    await user.click(button);
+
+    expect(mockLikeHandler.mock.calls).toHaveLength(2);
   });
 });

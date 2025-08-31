@@ -44,5 +44,5 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ### b. props.children and proptypes
 ### c. Testing React apps
 - `part5/bloglist-frontend`: Exercises 5.1 - 5.16, a simple React app with user login functionality that communicates with the backend from part 4 and is tested using Vitest
-
+### d. End to end testing: Playwright
 In progress...
