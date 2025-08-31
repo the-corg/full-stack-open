@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Blog from './Blog';
 
 describe('<Blog />', () => {
@@ -37,5 +38,23 @@ describe('<Blog />', () => {
     const element = screen.getByText('likes', { exact: false });
 
     expect(element).not.toBeVisible();
+  });
+
+  test('after the "show" button is clicked, the URL is displayed', async () => {
+    const user = userEvent.setup();
+    const button = screen.getByText('show');
+    await user.click(button);
+
+    const element = screen.getByText('https:/example.com', { exact: false });
+    expect(element).toBeVisible();
+  });
+
+  test('after the "show" button is clicked, the likes are displayed', async () => {
+    const user = userEvent.setup();
+    const button = screen.getByText('show');
+    await user.click(button);
+
+    const element = screen.getByText('likes', { exact: false });
+    expect(element).toBeVisible();
   });
 });
