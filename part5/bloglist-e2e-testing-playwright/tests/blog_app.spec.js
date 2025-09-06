@@ -1,4 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test');
+const { loginWith, createBlog } = require('./helper');
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -23,18 +24,14 @@ describe('Blog app', () => {
 
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-      await page.getByRole('textbox').first().fill('arnold');
-      await page.getByRole('textbox').last().fill("i'llbeback");
-      await page.getByRole('button', { name: 'login' }).click();
+      await loginWith(page, 'arnold', "i'llbeback");
       await expect(
         page.getByText('Arnold Schwarzenegger logged in')
       ).toBeVisible();
     });
 
     test('fails with wrong credentials', async ({ page }) => {
-      await page.getByRole('textbox').first().fill('arnold');
-      await page.getByRole('textbox').last().fill('iforgotmypassword');
-      await page.getByRole('button', { name: 'login' }).click();
+      await loginWith(page, 'arnold', 'iforgotmypassword');
 
       const errorDiv = page.locator('.error');
       await expect(errorDiv).toContainText('invalid username or password');
@@ -43,6 +40,34 @@ describe('Blog app', () => {
       await expect(
         page.getByText('Arnold Schwarzenegger logged in')
       ).not.toBeVisible();
+    });
+  });
+
+  describe('When logged in', () => {
+    beforeEach(async ({ page }) => {
+      await loginWith(page, 'arnold', "i'llbeback");
+    });
+
+    test('a new blog can be created', async ({ page }) => {
+      await createBlog(page, 'Test Title', 'Test Author', 'https://testurl');
+      await expect(page.getByText('Test Title Test Author')).toBeVisible();
+    });
+
+    describe('and several blogs exists', () => {
+      beforeEach(async ({ page }) => {
+        await createBlog(page, 'Blog 1', 'Author 1', 'https://url1');
+        await createBlog(page, 'Blog 2', 'Author 2', 'https://url2');
+        await createBlog(page, 'Blog 3', 'Author 3', 'https://url3');
+      });
+
+      test('one of those can be liked', async ({ page }) => {
+        const secondBlog = page.getByText('Blog 2 Author 2').locator('..');
+        await secondBlog.getByRole('button', { name: 'show' }).click();
+        await expect(secondBlog.getByText('likes 0')).toBeVisible();
+
+        await secondBlog.getByRole('button', { name: 'like' }).click();
+        await expect(secondBlog.getByText('likes 1')).toBeVisible();
+      });
     });
   });
 });
