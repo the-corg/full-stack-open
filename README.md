@@ -45,4 +45,6 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ### c. Testing React apps
 - `part5/bloglist-frontend`: Exercises 5.1 - 5.16, a simple React app with user login functionality that communicates with the backend from part 4 and is tested using Vitest
 ### d. End to end testing: Playwright
+- `part5/bloglist-e2e-testing-playwright`: Exercises 5.17-5.23, end-to-end testing of the bloglist app with Playwright
+
 In progress...
