@@ -111,6 +111,93 @@ describe('Blog app', () => {
         await secondBlog.getByRole('button', { name: 'show' }).click();
         await expect(secondBlog.getByText('remove')).not.toBeVisible();
       });
+
+      test('the blogs are sorted in descending order by number of likes', async ({
+        page,
+      }) => {
+        const firstBlog = page.getByText('Blog 1 Author 1').locator('..');
+        const secondBlog = page.getByText('Blog 2 Author 2').locator('..');
+        const thirdBlog = page.getByText('Blog 3 Author 3').locator('..');
+
+        await firstBlog.getByRole('button', { name: 'show' }).click();
+        await secondBlog.getByRole('button', { name: 'show' }).click();
+        await thirdBlog.getByRole('button', { name: 'show' }).click();
+
+        await expect(firstBlog.getByText('likes 0')).toBeVisible();
+        await expect(secondBlog.getByText('likes 0')).toBeVisible();
+        await expect(thirdBlog.getByText('likes 0')).toBeVisible();
+
+        await secondBlog.getByRole('button', { name: 'like' }).click();
+        await secondBlog.getByText('likes 1').waitFor();
+
+        await expect(
+          page
+            .getByText('hide')
+            .first()
+            .locator('../..')
+            .getByText('Blog 2 Author 2')
+        ).toBeVisible();
+
+        await thirdBlog.getByRole('button', { name: 'like' }).click();
+        await thirdBlog.getByText('likes 1').waitFor();
+        await thirdBlog.getByRole('button', { name: 'like' }).click();
+        await thirdBlog.getByText('likes 2').waitFor();
+
+        await expect(
+          page
+            .getByText('hide')
+            .first()
+            .locator('../..')
+            .getByText('Blog 2 Author 2')
+        ).not.toBeVisible();
+
+        await expect(
+          page
+            .getByText('hide')
+            .first()
+            .locator('../..')
+            .getByText('Blog 3 Author 3')
+        ).toBeVisible();
+
+        await expect(
+          page
+            .getByText('hide')
+            .last()
+            .locator('../..')
+            .getByText('Blog 1 Author 1')
+        ).toBeVisible();
+
+        await firstBlog.getByRole('button', { name: 'like' }).click();
+        await firstBlog.getByText('likes 1').waitFor();
+        await firstBlog.getByRole('button', { name: 'like' }).click();
+        await firstBlog.getByText('likes 2').waitFor();
+        await firstBlog.getByRole('button', { name: 'like' }).click();
+        await firstBlog.getByText('likes 3').waitFor();
+
+        await expect(
+          page
+            .getByText('hide')
+            .first()
+            .locator('../..')
+            .getByText('Blog 3 Author 3')
+        ).not.toBeVisible();
+
+        await expect(
+          page
+            .getByText('hide')
+            .first()
+            .locator('../..')
+            .getByText('Blog 1 Author 1')
+        ).toBeVisible();
+
+        await expect(
+          page
+            .getByText('hide')
+            .last()
+            .locator('../..')
+            .getByText('Blog 2 Author 2')
+        ).toBeVisible();
+      });
     });
   });
 });
