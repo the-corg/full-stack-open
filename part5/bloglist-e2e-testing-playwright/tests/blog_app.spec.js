@@ -53,6 +53,24 @@ describe('Blog app', () => {
       await expect(page.getByText('Test Title Test Author')).toBeVisible();
     });
 
+    test('a blog created by the user can be deleted', async ({ page }) => {
+      await createBlog(page, 'Test Title', 'Test Author', 'https://testurl');
+      await expect(page.getByText('Test Title Test Author')).toBeVisible();
+
+      const blog = page.getByText('Test Title Test Author').locator('..');
+      await blog.getByRole('button', { name: 'show' }).click();
+
+      page.on('dialog', async dialog => {
+        await dialog.accept();
+      });
+      await blog.getByRole('button', { name: 'remove' }).click();
+      await page
+        .getByText('Test Title Test Author')
+        .waitFor({ state: 'detached' });
+
+      await expect(page.getByText('Test Title Test Author')).not.toBeVisible();
+    });
+
     describe('and several blogs exists', () => {
       beforeEach(async ({ page }) => {
         await createBlog(page, 'Blog 1', 'Author 1', 'https://url1');
@@ -67,6 +85,31 @@ describe('Blog app', () => {
 
         await secondBlog.getByRole('button', { name: 'like' }).click();
         await expect(secondBlog.getByText('likes 1')).toBeVisible();
+      });
+
+      test('only the user who added the blog can see its remove button', async ({
+        page,
+        request,
+      }) => {
+        const secondBlog = page.getByText('Blog 2 Author 2').locator('..');
+        await secondBlog.getByRole('button', { name: 'show' }).click();
+        await expect(secondBlog.getByText('remove')).toBeVisible();
+
+        await request.post('http://localhost:3003/api/users', {
+          data: {
+            name: 'Another User',
+            username: 'another',
+            password: 'pwd123',
+          },
+        });
+
+        await page.getByRole('button', { name: 'logout' }).click();
+
+        await loginWith(page, 'another', 'pwd123');
+        await expect(page.getByText('Another User logged in')).toBeVisible();
+
+        await secondBlog.getByRole('button', { name: 'show' }).click();
+        await expect(secondBlog.getByText('remove')).not.toBeVisible();
       });
     });
   });
