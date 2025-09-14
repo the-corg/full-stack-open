@@ -46,5 +46,8 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 - `part5/bloglist-frontend`: Exercises 5.1 - 5.16, a simple React app with user login functionality that communicates with the backend from part 4 and is tested using Vitest
 ### d. End to end testing: Playwright
 - `part5/bloglist-e2e-testing-playwright`: Exercises 5.17-5.23, end-to-end testing of the bloglist app with Playwright
+## Part 6. Advanced state management
+### a. Flux-architecture and Redux
+- `part6/unicafe-redux`: Exercises 6.1-6.2, handling state management with Redux, with the reducer tested using Jest
 
 In progress...
