@@ -52,4 +52,4 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 
 In progress...
 
-![Certificate of completion](certificate-fullstack.png))
+![Certificate of completion](certificate-fullstack.png)
