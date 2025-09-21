@@ -51,3 +51,5 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 - `part6/unicafe-redux`: Exercises 6.1-6.2, handling state management with Redux, with the reducer tested using Jest
 
 In progress...
+
+![Certificate of completion](certificate-fullstack.png))
