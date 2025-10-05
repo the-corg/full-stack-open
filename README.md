@@ -50,7 +50,10 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ### a. Flux-architecture and Redux
 - `part6/unicafe-redux`: Exercises 6.1-6.2, handling state management with Redux, with the reducer tested using Jest
 ### b. Many reducers
-- `part6/anecdotes-redux`: Exercises 6.3-6.13, handling state management with Redux and Redux Toolkit
+### c. Communicating with server in a Redux application
+- `part6/anecdotes-redux`: Exercises 6.3-6.19, handling complex state management with Redux, Redux Toolkit, and Redux Thunk
+### d. React Query, useReducer and the context
+- `part6/anecdotes-query`: Exercises 6.20-6.24, server state management with React Query (TanStack Query)
 
 In progress...
 
