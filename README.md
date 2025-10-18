@@ -60,4 +60,6 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ### a. React Router
 In progress...
 
-![Certificate of completion](certificate-fullstack.png)
+---
+
+![Certificate of completion](https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/b9948d0ef83df67a9a4113dad9752af5)
