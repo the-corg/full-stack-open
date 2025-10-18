@@ -58,6 +58,9 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 
 ## Part 7. React router, custom hooks, styling app with CSS and webpack
 ### a. React Router
+### b. Custom hooks
+- `part7/anecdotes-query`: Exercises 7.1-7.6, working with React Router and custom hooks
+
 In progress...
 
 ---
