@@ -5,9 +5,10 @@ import {
   Route,
   Link,
   useParams,
+  useNavigate,
 } from 'react-router-dom';
 
-const Menu = ({ anecdotes, addNew }) => {
+const Menu = ({ anecdotes, addNew, notification }) => {
   const padding = {
     paddingRight: 5,
   };
@@ -25,6 +26,7 @@ const Menu = ({ anecdotes, addNew }) => {
           about
         </Link>
       </div>
+      <div>{notification}</div>
 
       <Routes>
         <Route
@@ -91,20 +93,21 @@ const About = () => (
 );
 
 const Footer = () => (
-  <div>
+  <footer>
     Anecdote app for <a href='https://fullstackopen.com/'>Full Stack Open</a>.
     See{' '}
     <a href='https://github.com/the-corg/full-stack-open/tree/master/part7/routed-anecdotes'>
       https://github.com/the-corg/full-stack-open/tree/master/part7/routed-anecdotes
     </a>{' '}
     for the source code.
-  </div>
+  </footer>
 );
 
 const CreateNew = props => {
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
   const [info, setInfo] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -114,6 +117,7 @@ const CreateNew = props => {
       info,
       votes: 0,
     });
+    navigate('/');
   };
 
   return (
@@ -173,6 +177,9 @@ const App = () => {
   const addNew = anecdote => {
     anecdote.id = Math.round(Math.random() * 10000);
     setAnecdotes(anecdotes.concat(anecdote));
+    const text = `A new anecdote "${anecdote.content}" has been created`;
+    setNotification(text);
+    setTimeout(() => setNotification(''), 5000);
   };
 
   const anecdoteById = id => anecdotes.find(a => a.id === id);
@@ -191,7 +198,7 @@ const App = () => {
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Menu anecdotes={anecdotes} addNew={addNew} />
+      <Menu anecdotes={anecdotes} addNew={addNew} notification={notification} />
       <Footer />
     </div>
   );

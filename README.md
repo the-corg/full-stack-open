@@ -62,4 +62,5 @@ In progress...
 
 ---
 
-![Certificate of completion](https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/b9948d0ef83df67a9a4113dad9752af5)
+![Certificate of completion](certificate-fullstack.png)
+[Certificate verification link](https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/b9948d0ef83df67a9a4113dad9752af5)
