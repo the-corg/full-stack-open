@@ -46,6 +46,7 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 - `part5/bloglist-frontend`: Exercises 5.1 - 5.16, a simple React app with user login functionality that communicates with the backend from part 4 and is tested using Vitest
 ### d. End to end testing: Playwright
 - `part5/bloglist-e2e-testing-playwright`: Exercises 5.17-5.23, end-to-end testing of the bloglist app with Playwright
+
 ## Part 6. Advanced state management
 ### a. Flux-architecture and Redux
 - `part6/unicafe-redux`: Exercises 6.1-6.2, handling state management with Redux, with the reducer tested using Jest
@@ -53,8 +54,10 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ### c. Communicating with server in a Redux application
 - `part6/anecdotes-redux`: Exercises 6.3-6.19, handling complex state management with Redux, Redux Toolkit, and Redux Thunk
 ### d. React Query, useReducer and the context
-- `part6/anecdotes-query`: Exercises 6.20-6.24, server state management with React Query (TanStack Query)
+- `part6/anecdotes-query`: Exercises 6.20-6.24, server state management with React Query (TanStack Query) and frontend state management with the Context API and the useReducer hook
 
+## Part 7. React router, custom hooks, styling app with CSS and webpack
+### a. React Router
 In progress...
 
 ![Certificate of completion](certificate-fullstack.png)

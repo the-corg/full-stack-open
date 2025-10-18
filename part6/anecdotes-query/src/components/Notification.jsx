@@ -1,3 +1,5 @@
+import { useNotificationValue } from './NotificationContext';
+
 const Notification = () => {
   const style = {
     border: 'solid',
@@ -5,10 +7,9 @@ const Notification = () => {
     borderWidth: 1,
     marginBottom: 5,
   };
+  const notification = useNotificationValue();
 
-  if (true) return null;
-
-  return <div style={style}></div>;
+  return notification ? <div style={style}>{notification}</div> : null;
 };
 
 export default Notification;
