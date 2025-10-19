@@ -60,7 +60,9 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ### a. React Router
 ### b. Custom hooks
 - `part7/anecdotes-query`: Exercises 7.1-7.6, working with React Router and custom hooks
-
+- `part7/country-hook`: Exercise 7.7, implementing a custom hook that fetches data from a REST API
+- `part7/ultimate-hooks`: Exercise 7.8, implementing a custom hook that communicates with the backend 
+### c. More about styles
 In progress...
 
 ---
