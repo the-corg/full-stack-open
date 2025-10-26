@@ -63,6 +63,11 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 - `part7/country-hook`: Exercise 7.7, implementing a custom hook that fetches data from a REST API
 - `part7/ultimate-hooks`: Exercise 7.8, implementing a custom hook that communicates with the backend 
 ### c. More about styles
+### d. Webpack
+### e. Class components, Miscellaneous
+### f. Exercises: extending the bloglist
+- `part7/bloglist-frontend`: Exercises 7.9-7.13, improving the React app developed in part 5 to use Redux for state management
+
 In progress...
 
 ---
