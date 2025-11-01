@@ -1,12 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setNotification } from './reducers/notificationReducer';
-import {
-  initializeBlogs,
-  createBlog,
-  like,
-  remove,
-} from './reducers/blogReducer';
+import { initializeBlogs, createBlog, like, remove } from './reducers/blogReducer';
+import { setUser } from './reducers/userReducer';
 import LoginForm from './components/LoginForm';
 import Blog from './components/Blog';
 import Togglable from './components/Togglable';
@@ -14,34 +10,30 @@ import CreateForm from './components/CreateForm';
 import Notification from './components/Notification';
 import blogService from './services/blogs';
 
-const unknownAuthorHelper = author =>
-  author === '' ? 'unknown author' : author;
+const authorStr = author => (author === '' ? 'unknown author' : author);
 
 const App = () => {
   const dispatch = useDispatch();
 
   const blogs = useSelector(({ blogs }) => blogs);
+  const user = useSelector(({ user }) => user);
 
   useEffect(() => {
     dispatch(initializeBlogs());
   }, [dispatch]);
 
-  const [user, setUser] = useState(null);
-
   useEffect(() => {
-    const loggedInUserJSON = window.localStorage.getItem(
-      'loggedInBloglistUser',
-    );
+    const loggedInUserJSON = window.localStorage.getItem('loggedInBloglistUser');
     if (loggedInUserJSON) {
       const user = JSON.parse(loggedInUserJSON);
       blogService.setToken(user.token);
-      setUser(user);
+      dispatch(setUser(user));
     }
   }, []);
 
   const handleLogout = () => {
     window.localStorage.clear();
-    setUser(null);
+    dispatch(setUser(null));
   };
 
   const createFormRef = useRef();
@@ -49,11 +41,7 @@ const App = () => {
   const addBlog = async newBlog => {
     try {
       await dispatch(createBlog(newBlog, user));
-      dispatch(
-        setNotification(
-          `a new blog '${newBlog.title}' by ${unknownAuthorHelper(newBlog.author)} was added`,
-        ),
-      );
+      dispatch(setNotification(`added blog '${newBlog.title}' by ${authorStr(newBlog.author)}`));
       createFormRef.current.toggleVisibility();
       return true;
     } catch (exception) {
@@ -65,37 +53,24 @@ const App = () => {
   const likeBlog = async blog => {
     try {
       await dispatch(like(blog));
-      dispatch(
-        setNotification(
-          ` liked '${blog.title}' by ${unknownAuthorHelper(blog.author)}`,
-        ),
-      );
+      dispatch(setNotification(`liked '${blog.title}' by ${authorStr(blog.author)}`));
     } catch (exception) {
       dispatch(setNotification(exception.response.data.error, true));
     }
   };
 
   const deleteBlog = async blog => {
-    if (
-      !window.confirm(
-        `Remove blog ${blog.title} by ${unknownAuthorHelper(blog.author)}?`,
-      )
-    )
-      return;
+    if (!window.confirm(`Remove blog ${blog.title} by ${authorStr(blog.author)}?`)) return;
 
     try {
       await dispatch(remove(blog));
-      dispatch(
-        setNotification(
-          ` deleted '${blog.title}' by ${unknownAuthorHelper(blog.author)}`,
-        ),
-      );
+      dispatch(setNotification(`deleted '${blog.title}' by ${authorStr(blog.author)}`));
     } catch (exception) {
       dispatch(setNotification(exception.response.data.error, true));
     }
   };
 
-  if (!user) return <LoginForm setUser={setUser} />;
+  if (!user) return <LoginForm />;
 
   return (
     <div>
@@ -115,9 +90,7 @@ const App = () => {
             blog={blog}
             likeBlog={async () => await likeBlog(blog)}
             deleteBlog={
-              blog.user?.username === user.username
-                ? async () => await deleteBlog(blog)
-                : undefined
+              blog.user?.username === user.username ? async () => await deleteBlog(blog) : undefined
             }
           />
         ))}
