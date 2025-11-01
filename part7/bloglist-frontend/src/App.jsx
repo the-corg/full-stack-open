@@ -1,18 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { setNotification } from './reducers/notificationReducer';
 import LoginForm from './components/LoginForm';
 import Blog from './components/Blog';
 import Togglable from './components/Togglable';
 import CreateForm from './components/CreateForm';
 import Notification from './components/Notification';
 import blogService from './services/blogs';
-import messageService from './services/messages';
 
 const App = () => {
+  const dispatch = useDispatch();
+
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-
-  const [message, setMessage] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs(blogs));
@@ -42,15 +42,16 @@ const App = () => {
       returnedBlog.user = user;
       setBlogs(blogs.concat(returnedBlog));
 
-      messageService.showNotification(
-        setMessage,
-        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+      dispatch(
+        setNotification(
+          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+        ),
       );
       createFormRef.current.toggleVisibility();
       return true;
     } catch (exception) {
       console.log(exception);
-      messageService.showError(setErrorMessage, exception.response.data.error);
+      dispatch(setNotification(exception.response.data.error, true));
     }
     return false;
   };
@@ -70,7 +71,7 @@ const App = () => {
       setBlogs(newBlogs);
     } catch (exception) {
       console.log(exception);
-      messageService.showError(setErrorMessage, exception.response.data.error);
+      dispatch(setNotification(exception.response.data.error, true));
     }
   };
 
@@ -84,7 +85,7 @@ const App = () => {
       setBlogs(blogs.filter(b => b.id !== blog.id));
     } catch (exception) {
       console.log(exception);
-      messageService.showError(setErrorMessage, exception.response.data.error);
+      dispatch(setNotification(exception.response.data.error, true));
     }
   };
 
@@ -93,8 +94,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={message} />
-      <Notification message={errorMessage} isError='true' />
+      <Notification />
       <p>
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </p>

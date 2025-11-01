@@ -1,14 +1,15 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setNotification } from '../reducers/notificationReducer';
 import Notification from './Notification';
 import loginService from '../services/login';
 import blogService from '../services/blogs';
-import messageService from '../services/messages';
 import PropTypes from 'prop-types';
 
 const LoginForm = ({ setUser }) => {
+  const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleLogin = async event => {
     event.preventDefault();
@@ -22,14 +23,14 @@ const LoginForm = ({ setUser }) => {
       setPassword('');
     } catch (exception) {
       console.log(exception.response.data.error);
-      messageService.showError(setErrorMessage, exception.response.data.error);
+      dispatch(setNotification(exception.response.data.error, true));
     }
   };
 
   return (
     <div>
       <h2>Log in to application</h2>
-      <Notification message={errorMessage} isError='true' />
+      <Notification />
       <form onSubmit={handleLogin}>
         <div>
           username{' '}
