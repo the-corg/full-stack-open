@@ -1,6 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setNotification } from './reducers/notificationReducer';
+import {
+  initializeBlogs,
+  createBlog,
+  like,
+  remove,
+} from './reducers/blogReducer';
 import LoginForm from './components/LoginForm';
 import Blog from './components/Blog';
 import Togglable from './components/Togglable';
@@ -8,15 +14,19 @@ import CreateForm from './components/CreateForm';
 import Notification from './components/Notification';
 import blogService from './services/blogs';
 
+const unknownAuthorHelper = author =>
+  author === '' ? 'unknown author' : author;
+
 const App = () => {
   const dispatch = useDispatch();
 
-  const [blogs, setBlogs] = useState([]);
-  const [user, setUser] = useState(null);
+  const blogs = useSelector(({ blogs }) => blogs);
 
   useEffect(() => {
-    blogService.getAll().then(blogs => setBlogs(blogs));
-  }, []);
+    dispatch(initializeBlogs());
+  }, [dispatch]);
+
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const loggedInUserJSON = window.localStorage.getItem(
@@ -38,19 +48,15 @@ const App = () => {
 
   const addBlog = async newBlog => {
     try {
-      const returnedBlog = await blogService.create(newBlog);
-      returnedBlog.user = user;
-      setBlogs(blogs.concat(returnedBlog));
-
+      await dispatch(createBlog(newBlog, user));
       dispatch(
         setNotification(
-          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+          `a new blog '${newBlog.title}' by ${unknownAuthorHelper(newBlog.author)} was added`,
         ),
       );
       createFormRef.current.toggleVisibility();
       return true;
     } catch (exception) {
-      console.log(exception);
       dispatch(setNotification(exception.response.data.error, true));
     }
     return false;
@@ -58,33 +64,33 @@ const App = () => {
 
   const likeBlog = async blog => {
     try {
-      const returnedBlog = await blogService.like(blog);
-
-      returnedBlog.user = { ...blog.user };
-
-      const newBlogs = [
-        ...blogs.slice(0, blogs.indexOf(blog)),
-        returnedBlog,
-        ...blogs.slice(blogs.indexOf(blog) + 1),
-      ];
-
-      setBlogs(newBlogs);
+      await dispatch(like(blog));
+      dispatch(
+        setNotification(
+          ` liked '${blog.title}' by ${unknownAuthorHelper(blog.author)}`,
+        ),
+      );
     } catch (exception) {
-      console.log(exception);
       dispatch(setNotification(exception.response.data.error, true));
     }
   };
 
   const deleteBlog = async blog => {
-    if (blog.author === '') blog.author = 'Unknown author';
-    if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) return;
+    if (
+      !window.confirm(
+        `Remove blog ${blog.title} by ${unknownAuthorHelper(blog.author)}?`,
+      )
+    )
+      return;
 
     try {
-      await blogService.remove(blog);
-
-      setBlogs(blogs.filter(b => b.id !== blog.id));
+      await dispatch(remove(blog));
+      dispatch(
+        setNotification(
+          ` deleted '${blog.title}' by ${unknownAuthorHelper(blog.author)}`,
+        ),
+      );
     } catch (exception) {
-      console.log(exception);
       dispatch(setNotification(exception.response.data.error, true));
     }
   };
