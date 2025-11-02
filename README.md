@@ -66,7 +66,8 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ### d. Webpack
 ### e. Class components, Miscellaneous
 ### f. Exercises: extending the bloglist
-- `part7/bloglist-frontend`: Exercises 7.9-7.13, improving the React app developed in part 5 to use Redux for state management
+- `part7/bloglist-frontend-redux`: Exercises 7.9-7.13, updating the React app developed in part 5 to use Redux for state management
+- `part7/bloglist-frontend-query`: Exercises 7.9-7.13, updating the React app developed in part 5 to use React Query (TanStack Query) and Context for state management
 
 In progress...
 
