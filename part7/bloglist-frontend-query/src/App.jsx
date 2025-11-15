@@ -1,27 +1,27 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useEffect, useRef, useContext } from 'react';
 import LoginForm from './components/LoginForm';
 import Blog from './components/Blog';
 import Togglable from './components/Togglable';
 import CreateForm from './components/CreateForm';
 import Notification from './components/Notification';
 import NotificationContext from './components/NotificationContext';
+import UserContext from './components/UserContext';
 import { useQuery } from '@tanstack/react-query';
 import { getBlogs, like, remove, setToken } from './requests';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const App = () => {
-  const [user, setUser] = useState(null);
-
   const { notificationDispatch } = useContext(NotificationContext);
+  const { user, userDispatch } = useContext(UserContext);
 
   useEffect(() => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInBloglistUser');
     if (loggedInUserJSON) {
-      const user = JSON.parse(loggedInUserJSON);
-      setToken(user.token);
-      setUser(user);
+      const loggedInUser = JSON.parse(loggedInUserJSON);
+      setToken(loggedInUser.token);
+      userDispatch({ type: 'LOGIN', payload: loggedInUser });
     }
-  }, []);
+  }, [userDispatch]);
 
   const queryClient = useQueryClient();
   const likeBlogMutation = useMutation({
@@ -66,10 +66,10 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.clear();
-    setUser(null);
+    userDispatch({ type: 'LOGOUT' });
   };
 
-  if (!user) return <LoginForm setUser={setUser} />;
+  if (!user) return <LoginForm />;
 
   return (
     <div>
@@ -90,7 +90,10 @@ const App = () => {
             likeBlog={async () => await likeBlogMutation.mutate(blog)}
             deleteBlog={
               blog.user?.username === user.username
-                ? async () => deleteBlogMutation.mutate(blog)
+                ? async () => {
+                    if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) return;
+                    deleteBlogMutation.mutate(blog);
+                  }
                 : undefined
             }
           />

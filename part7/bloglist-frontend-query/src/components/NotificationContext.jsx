@@ -19,8 +19,7 @@ const notificationReducer = (state, action) => {
 const NotificationContext = createContext();
 
 export const NotificationContextProvider = props => {
-  const [notification, notificationDispatch] = useReducer(notificationReducer, 0);
-
+  const [notification, notificationDispatch] = useReducer(notificationReducer, initialState);
   return (
     <NotificationContext.Provider value={{ notification, notificationDispatch }}>
       {props.children}

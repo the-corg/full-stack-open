@@ -3,10 +3,12 @@ import Notification from './Notification';
 import loginService from '../services/login';
 import PropTypes from 'prop-types';
 import NotificationContext from './NotificationContext';
+import UserContext from './UserContext';
 import { setToken } from '../requests';
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = () => {
   const { notificationDispatch } = useContext(NotificationContext);
+  const { userDispatch } = useContext(UserContext);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -18,7 +20,7 @@ const LoginForm = ({ setUser }) => {
       const user = await loginService.login({ username, password });
       window.localStorage.setItem('loggedInBloglistUser', JSON.stringify(user));
       setToken(user.token);
-      setUser(user);
+      userDispatch({ type: 'LOGIN', payload: user });
       setUsername('');
       setPassword('');
     } catch (exception) {
