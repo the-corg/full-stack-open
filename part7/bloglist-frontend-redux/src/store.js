@@ -6,9 +6,9 @@ import usersReducer from './reducers/usersReducer';
 
 const store = configureStore({
   reducer: {
+    users: usersReducer,
     blogs: blogReducer,
     user: userReducer,
-    users: usersReducer,
     notification: notificationReducer,
   },
 });

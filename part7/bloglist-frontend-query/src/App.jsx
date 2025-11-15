@@ -5,7 +5,8 @@ import Notification from './components/Notification';
 import UserContext from './components/UserContext';
 import Users from './components/Users';
 import Blogs from './components/Blogs';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+import User from './components/User';
 
 const App = () => {
   const { user, userDispatch } = useContext(UserContext);
@@ -27,21 +28,19 @@ const App = () => {
   if (!user) return <LoginForm />;
 
   return (
-    <Router>
-      <div>
-        <h2>blogs</h2>
-        <Notification />
-        <p>
-          {user.name} logged in <button onClick={handleLogout}>logout</button>
-        </p>
-
-        <Routes>
-          <Route path='/users' element={<Users />} />
-          <Route path='/blogs' element={<Blogs />} />
-          <Route path='/' element={<Blogs />} />
-        </Routes>
-      </div>
-    </Router>
+    <div>
+      <h2>blogs</h2>
+      <Notification />
+      <p>
+        {user.name} logged in <button onClick={handleLogout}>logout</button>
+      </p>
+      <Routes>
+        <Route path='/users/:id' element={<User />} />
+        <Route path='/users' element={<Users />} />
+        <Route path='/blogs' element={<Blogs />} />
+        <Route path='/' element={<Blogs />} />
+      </Routes>
+    </div>
   );
 };
 
