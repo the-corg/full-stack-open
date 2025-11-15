@@ -1,4 +1,5 @@
 const baseUrl = '/api/blogs';
+const usersUrl = '/api/users';
 
 let token = null;
 export const setToken = newToken => {
@@ -56,4 +57,12 @@ export const remove = async object => {
     const r = JSON.parse(await response.text());
     throw new Error('Failed to create blog (' + r.error + ')');
   }
+};
+
+export const getUsers = async () => {
+  const response = await fetch(usersUrl);
+  if (!response.ok) {
+    throw new Error('Failed to fetch users' + response.status + ': ' + response.statusText);
+  }
+  return await response.json();
 };
