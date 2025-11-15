@@ -4,14 +4,15 @@ import Blog from './components/Blog';
 import Togglable from './components/Togglable';
 import CreateForm from './components/CreateForm';
 import Notification from './components/Notification';
-//import NotificationContext from './components/NotificationContext';
+import NotificationContext from './components/NotificationContext';
 import { useQuery } from '@tanstack/react-query';
-import { getBlogs, setToken } from './requests';
+import { getBlogs, like, remove, setToken } from './requests';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const App = () => {
   const [user, setUser] = useState(null);
 
-  //const { notificationDispatch } = useContext(NotificationContext);
+  const { notificationDispatch } = useContext(NotificationContext);
 
   useEffect(() => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInBloglistUser');
@@ -21,6 +22,35 @@ const App = () => {
       setUser(user);
     }
   }, []);
+
+  const queryClient = useQueryClient();
+  const likeBlogMutation = useMutation({
+    mutationFn: like,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] });
+    },
+    onError: err => {
+      const payload = err.message;
+      notificationDispatch({ type: 'ERROR', payload });
+      setTimeout(() => notificationDispatch({ type: 'REMOVE', payload }), 5000);
+    },
+  });
+
+  const deleteBlogMutation = useMutation({
+    mutationFn: remove,
+    onSuccess: (data, deletedBlog) => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] });
+
+      const payload = `blog ${deletedBlog.title} by ${deletedBlog.author} deleted successfully`;
+      notificationDispatch({ type: 'NOTIFICATION', payload });
+      setTimeout(() => notificationDispatch({ type: 'REMOVE', payload }), 5000);
+    },
+    onError: err => {
+      const payload = err.message;
+      notificationDispatch({ type: 'ERROR', payload });
+      setTimeout(() => notificationDispatch({ type: 'REMOVE', payload }), 5000);
+    },
+  });
 
   const createFormRef = useRef();
 
@@ -37,39 +67,6 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.clear();
     setUser(null);
-  };
-
-  const likeBlog = async blog => {
-    /*try {
-      //const returnedBlog = await blogService.like(blog);
-      //returnedBlog.user = { ...blog.user };
-      
-      const newBlogs = [
-        ...blogs.slice(0, blogs.indexOf(blog)),
-        returnedBlog,
-        ...blogs.slice(blogs.indexOf(blog) + 1),
-      ];
-      //setBlogs(newBlogs);
-    } catch (exception) {
-      const payload = exception.response.data.error;
-      notificationDispatch({ type: 'ERROR', payload });
-      setTimeout(() => notificationDispatch({ type: 'REMOVE', payload }), 5000);
-    }*/
-  };
-
-  const deleteBlog = async blog => {
-    /*
-    if (blog.author === '') blog.author = 'Unknown author';
-    if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) return;
-
-    try {
-      //await blogService.remove(blog);
-      //setBlogs(blogs.filter(b => b.id !== blog.id));
-    } catch (exception) {
-      const payload = exception.response.data.error;
-      notificationDispatch({ type: 'ERROR', payload });
-      setTimeout(() => notificationDispatch({ type: 'REMOVE', payload }), 5000);
-    }*/
   };
 
   if (!user) return <LoginForm setUser={setUser} />;
@@ -90,9 +87,11 @@ const App = () => {
           <Blog
             key={blog.id}
             blog={blog}
-            likeBlog={async () => await likeBlog(blog)}
+            likeBlog={async () => await likeBlogMutation.mutate(blog)}
             deleteBlog={
-              blog.user?.username === user.username ? async () => await deleteBlog(blog) : undefined
+              blog.user?.username === user.username
+                ? async () => deleteBlogMutation.mutate(blog)
+                : undefined
             }
           />
         ))}

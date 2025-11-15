@@ -1,9 +1,9 @@
 import { useState, useContext } from 'react';
 import Notification from './Notification';
 import loginService from '../services/login';
-import blogService from '../services/blogs';
 import PropTypes from 'prop-types';
 import NotificationContext from './NotificationContext';
+import { setToken } from '../requests';
 
 const LoginForm = ({ setUser }) => {
   const { notificationDispatch } = useContext(NotificationContext);
@@ -17,7 +17,7 @@ const LoginForm = ({ setUser }) => {
     try {
       const user = await loginService.login({ username, password });
       window.localStorage.setItem('loggedInBloglistUser', JSON.stringify(user));
-      blogService.setToken(user.token);
+      setToken(user.token);
       setUser(user);
       setUsername('');
       setPassword('');

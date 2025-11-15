@@ -26,3 +26,34 @@ export const createBlog = async newBlog => {
   const r = JSON.parse(await response.text());
   throw new Error('Failed to create blog (' + r.error + ')');
 };
+
+export const like = async object => {
+  const newObject = {
+    ...object,
+    likes: object.likes + 1,
+  };
+
+  const options = {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(newObject),
+  };
+  const response = await fetch(`${baseUrl}/${object.id}`, options);
+  if (!response.ok) {
+    throw new Error('Failed to like blog' + response.status + ': ' + response.statusText);
+  }
+  return await response.json();
+};
+
+export const remove = async object => {
+  const options = {
+    method: 'DELETE',
+    headers: { Authorization: token, 'Content-Type': 'application/json' },
+  };
+  const response = await fetch(`${baseUrl}/${object.id}`, options);
+
+  if (!response.ok) {
+    const r = JSON.parse(await response.text());
+    throw new Error('Failed to create blog (' + r.error + ')');
+  }
+};
