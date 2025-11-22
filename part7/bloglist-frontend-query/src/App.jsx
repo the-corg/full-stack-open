@@ -8,6 +8,27 @@ import Blogs from './components/Blogs';
 import { Routes, Route, Link } from 'react-router-dom';
 import User from './components/User';
 import Blog from './components/Blog';
+import styled from 'styled-components';
+
+const Button = styled.button`
+  background: DodgerBlue;
+  font-size: 1em;
+  margin: 5;
+  padding: 0.25em 1em;
+  border-radius: 3px;
+  border-color: #222288;
+  color: white;
+`;
+
+const Page = styled.div`
+  padding: 1em;
+  background: #eef5ff;
+`;
+
+const Navigation = styled.div`
+  background: DeepSkyBlue;
+  padding: 0.4em;
+`;
 
 const App = () => {
   const { user, userDispatch } = useContext(UserContext);
@@ -28,19 +49,16 @@ const App = () => {
 
   if (!user) return <LoginForm />;
 
-  const menu = {
-    backgroundColor: 'lightblue',
-    paddingLeft: 7,
-  };
   const margin = {
     margin: 5,
+    fontVariant: 'small-caps',
   };
 
   const separator = <span style={margin}>|</span>;
 
   return (
-    <div>
-      <div style={menu}>
+    <Page>
+      <Navigation>
         <Link style={margin} to='/'>
           blogs
         </Link>
@@ -50,10 +68,10 @@ const App = () => {
         </Link>
         {separator}
         <span style={margin}>{user.name} logged in</span>
-        <button style={margin} onClick={handleLogout}>
+        <Button style={margin} onClick={handleLogout}>
           logout
-        </button>
-      </div>
+        </Button>
+      </Navigation>
       <h2>blog app</h2>
       <Notification />
       <Routes>
@@ -63,7 +81,7 @@ const App = () => {
         <Route path='/blogs' element={<Blogs />} />
         <Route path='/' element={<Blogs />} />
       </Routes>
-    </div>
+    </Page>
   );
 };
 

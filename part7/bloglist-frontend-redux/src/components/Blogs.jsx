@@ -5,6 +5,7 @@ import CreateForm from './CreateForm';
 import { setNotification } from '../reducers/notificationReducer';
 import { initializeBlogs, createBlog } from '../reducers/blogReducer';
 import { Link } from 'react-router-dom';
+import { Table, TableBody, TableCell, TableContainer, TableRow, Paper } from '@mui/material';
 
 const authorStr = author => (author === '' ? 'unknown author' : author);
 
@@ -31,28 +32,28 @@ const Blogs = () => {
     return false;
   };
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  };
-
   return (
     <div>
       <Togglable buttonLabel='create new' ref={createFormRef}>
         <CreateForm addBlog={addBlog} />
       </Togglable>
-      {blogs
-        .toSorted((a, b) => b.likes - a.likes)
-        .map(blog => (
-          <div className='blog' style={blogStyle} key={blog.id}>
-            <Link to={`/blogs/${blog.id}`}>
-              {blog.title} by {authorStr(blog.author)}
-            </Link>
-          </div>
-        ))}
+
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            {blogs
+              .toSorted((a, b) => b.likes - a.likes)
+              .map(blog => (
+                <TableRow key={blog.id}>
+                  <TableCell>
+                    <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                  </TableCell>
+                  <TableCell>{authorStr(blog.author)}</TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

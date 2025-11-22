@@ -9,6 +9,7 @@ import Blogs from './components/Blogs';
 import { Routes, Route, Link } from 'react-router-dom';
 import User from './components/User';
 import Blog from './components/Blog';
+import { Button, AppBar, Toolbar, Typography } from '@mui/material';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -31,33 +32,26 @@ const App = () => {
 
   if (!user) return <LoginForm />;
 
-  const menu = {
-    backgroundColor: 'lightblue',
-    paddingLeft: 7,
-  };
-  const margin = {
-    margin: 5,
-  };
-
-  const separator = <span style={margin}>|</span>;
-
   return (
     <div>
-      <div style={menu}>
-        <Link style={margin} to='/'>
-          blogs
-        </Link>
-        {separator}
-        <Link style={margin} to='/users'>
-          users
-        </Link>
-        {separator}
-        <span style={margin}>{user.name} logged in</span>
-        <button style={margin} onClick={handleLogout}>
-          logout
-        </button>
-      </div>
-      <h2>blog app</h2>
+      <AppBar position='static'>
+        <Toolbar>
+          <Button color='inherit' component={Link} to='/'>
+            blogs
+          </Button>
+          <Button color='inherit' component={Link} to='/users'>
+            users
+          </Button>
+          <Typography sx={{ mx: 1 }} variant='body2'>
+            {user.name} logged in
+          </Typography>
+          <Button variant='contained' color='error' size='small' onClick={handleLogout}>
+            logout
+          </Button>
+        </Toolbar>
+      </AppBar>
+
+      <Typography variant='h3'>blog app</Typography>
       <Notification />
       <Routes>
         <Route path='/blogs/:id' element={<Blog />} />

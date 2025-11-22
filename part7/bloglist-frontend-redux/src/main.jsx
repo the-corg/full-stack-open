@@ -4,11 +4,14 @@ import { Provider } from 'react-redux';
 import store from './store';
 import './index.css';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { Container } from '@mui/material';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <Router>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </Router>,
+  <Container>
+    <Router>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </Router>
+  </Container>,
 );

@@ -5,6 +5,28 @@ import PropTypes from 'prop-types';
 import NotificationContext from './NotificationContext';
 import UserContext from './UserContext';
 import { setToken } from '../requests';
+import styled from 'styled-components';
+
+const Page = styled.div`
+  padding: 1em;
+  background: HoneyDew;
+`;
+
+const Button = styled.button`
+  background: ForestGreen;
+  font-size: 1em;
+  margin: 5;
+  padding: 0.25em 1em;
+  border-radius: 3px;
+  border-color: darkgreen;
+  color: white;
+`;
+
+const Input = styled.input`
+  margin: 0.25em;
+  padding: 0.5em;
+  font-size: 1em;
+`;
 
 const LoginForm = () => {
   const { notificationDispatch } = useContext(NotificationContext);
@@ -31,13 +53,13 @@ const LoginForm = () => {
   };
 
   return (
-    <div>
+    <Page>
       <h2>Log in to application</h2>
       <Notification />
       <form onSubmit={handleLogin}>
         <div>
           username{' '}
-          <input
+          <Input
             type='text'
             value={username}
             name='Username'
@@ -46,16 +68,16 @@ const LoginForm = () => {
         </div>
         <div>
           password{' '}
-          <input
+          <Input
             type='password'
             value={password}
             name='Password'
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button type='submit'>login</button>
+        <Button type='submit'>login</Button>
       </form>
-    </div>
+    </Page>
   );
 };
 

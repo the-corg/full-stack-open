@@ -2,6 +2,24 @@ import { useState, useContext } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createBlog } from '../requests';
 import NotificationContext from './NotificationContext';
+import styled from 'styled-components';
+
+const Button = styled.button`
+  background: ForestGreen;
+  font-size: 1em;
+  margin: 5;
+  padding: 0.25em 1em;
+  border-radius: 3px;
+  border-color: darkgreen;
+  color: white;
+`;
+
+const Input = styled.input`
+  margin: 0.25em;
+  padding: 0.5em;
+  font-size: 1em;
+  width: 16em;
+`;
 
 const CreateForm = ({ ref }) => {
   const queryClient = useQueryClient();
@@ -43,7 +61,7 @@ const CreateForm = ({ ref }) => {
         <div>
           <label>
             title:{' '}
-            <input
+            <Input
               value={title}
               type='text'
               name='Title'
@@ -55,7 +73,7 @@ const CreateForm = ({ ref }) => {
         <div>
           <label>
             author:{' '}
-            <input
+            <Input
               value={author}
               type='text'
               name='Author'
@@ -67,7 +85,7 @@ const CreateForm = ({ ref }) => {
         <div>
           <label>
             url:{' '}
-            <input
+            <Input
               value={url}
               type='text'
               name='Url'
@@ -77,7 +95,7 @@ const CreateForm = ({ ref }) => {
           </label>
         </div>
         <div>
-          <button type='submit'>create</button>
+          <Button type='submit'>create</Button>
         </div>
       </form>
     </div>

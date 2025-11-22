@@ -5,6 +5,34 @@ import NotificationContext from './NotificationContext';
 import UserContext from './UserContext';
 import { getBlogs, like, remove, comment } from '../requests';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import styled from 'styled-components';
+
+const Button = styled.button`
+  background: ForestGreen;
+  font-size: 1em;
+  margin: 5;
+  padding: 0.25em 1em;
+  border-radius: 3px;
+  border-color: darkgreen;
+  color: white;
+`;
+
+const LikeButton = styled(Button)`
+  border-color: magenta;
+  background: deeppink;
+`;
+
+const RemoveButton = styled(Button)`
+  border-color: darkred;
+  background: red;
+`;
+
+const Input = styled.input`
+  margin: 0.25em;
+  padding: 0.5em;
+  font-size: 1em;
+  width: 16em;
+`;
 
 const Blog = () => {
   const id = useParams().id;
@@ -93,10 +121,10 @@ const Blog = () => {
         <a href={blog.url}>{blog.url}</a>
         <div>
           {blog.likes} likes{' '}
-          <button onClick={async () => await likeBlogMutation.mutate(blog)}>like</button>
+          <LikeButton onClick={async () => await likeBlogMutation.mutate(blog)}>like</LikeButton>
         </div>
         <div>added by {blog.user?.name ?? 'Unknown user'}</div>
-        <button
+        <RemoveButton
           style={{ display: deleteBlog ? '' : 'none' }}
           onClick={async () => {
             if (
@@ -109,18 +137,18 @@ const Blog = () => {
           }}
         >
           remove
-        </button>
+        </RemoveButton>
         <div>
           <h3>comments</h3>
           <form onSubmit={commentBlog}>
-            <input
+            <Input
               value={text}
               type='text'
               name='text'
               onChange={({ target }) => setText(target.value)}
               placeholder='new comment'
             />
-            <button type='submit'>add comment</button>
+            <Button type='submit'>add comment</Button>
           </form>
           <ul>
             {blog.comments.map((comment, index) => (

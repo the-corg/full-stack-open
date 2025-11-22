@@ -5,6 +5,7 @@ import { setUser } from '../reducers/userReducer';
 import Notification from './Notification';
 import loginService from '../services/login';
 import blogService from '../services/blogs';
+import { TextField, Button, Typography } from '@mui/material';
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -28,28 +29,22 @@ const LoginForm = () => {
 
   return (
     <div>
-      <h2>Log in to application</h2>
+      <Typography variant='h3'>Log in to application</Typography>
       <Notification />
       <form onSubmit={handleLogin}>
         <div>
-          username{' '}
-          <input
-            type='text'
-            value={username}
-            name='Username'
-            onChange={({ target }) => setUsername(target.value)}
-          />
+          <TextField label='username' onChange={({ target }) => setUsername(target.value)} />
         </div>
         <div>
-          password{' '}
-          <input
+          <TextField
+            label='password'
             type='password'
-            value={password}
-            name='Password'
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button type='submit'>login</button>
+        <Button variant='contained' color='success' type='submit'>
+          login
+        </Button>
       </form>
     </div>
   );

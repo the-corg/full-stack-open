@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { TextField, Button } from '@mui/material';
 
 const CreateForm = ({ addBlog }) => {
   const [title, setTitle] = useState('');
@@ -19,43 +20,30 @@ const CreateForm = ({ addBlog }) => {
       <h2>create new</h2>
       <form onSubmit={createNewBlog}>
         <div>
-          <label>
-            title:{' '}
-            <input
-              value={title}
-              type='text'
-              name='Title'
-              onChange={({ target }) => setTitle(target.value)}
-              placeholder='title of the blog'
-            />
-          </label>
+          <TextField
+            label='title'
+            placeholder='title of the blog'
+            onChange={({ target }) => setTitle(target.value)}
+          />
         </div>
         <div>
-          <label>
-            author:{' '}
-            <input
-              value={author}
-              type='text'
-              name='Author'
-              onChange={({ target }) => setAuthor(target.value)}
-              placeholder='author of the blog (optional)'
-            />
-          </label>
+          <TextField
+            label='author'
+            placeholder='author of the blog (optional)'
+            onChange={({ target }) => setAuthor(target.value)}
+          />
         </div>
         <div>
-          <label>
-            url:{' '}
-            <input
-              value={url}
-              type='text'
-              name='Url'
-              onChange={({ target }) => setUrl(target.value)}
-              placeholder='URL of the blog'
-            />
-          </label>
+          <TextField
+            label='url'
+            placeholder='URL of the blog'
+            onChange={({ target }) => setUrl(target.value)}
+          />
         </div>
         <div>
-          <button type='submit'>create</button>
+          <Button variant='outlined' color='success' type='submit'>
+            create
+          </Button>
         </div>
       </form>
     </div>
