@@ -54,6 +54,8 @@ const Blog = () => {
   }
   const blog = result.data.find(b => b.id === id);
 
+  if (!blog) return <div>Blog not found.</div>;
+
   const deleteBlog = blog.user?.username === user.username;
 
   return (

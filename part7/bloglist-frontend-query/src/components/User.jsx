@@ -15,6 +15,8 @@ const User = () => {
   }
   const user = result.data.find(u => u.id === id);
 
+  if (!user) return <div>User not found.</div>;
+
   return (
     <div>
       <h2>{user.name}</h2>

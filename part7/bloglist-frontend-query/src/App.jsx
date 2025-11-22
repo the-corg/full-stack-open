@@ -5,7 +5,7 @@ import Notification from './components/Notification';
 import UserContext from './components/UserContext';
 import Users from './components/Users';
 import Blogs from './components/Blogs';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import User from './components/User';
 import Blog from './components/Blog';
 
@@ -28,13 +28,34 @@ const App = () => {
 
   if (!user) return <LoginForm />;
 
+  const menu = {
+    backgroundColor: 'lightblue',
+    paddingLeft: 7,
+  };
+  const margin = {
+    margin: 5,
+  };
+
+  const separator = <span style={margin}>|</span>;
+
   return (
     <div>
-      <h2>blogs</h2>
+      <div style={menu}>
+        <Link style={margin} to='/'>
+          blogs
+        </Link>
+        {separator}
+        <Link style={margin} to='/users'>
+          users
+        </Link>
+        {separator}
+        <span style={margin}>{user.name} logged in</span>
+        <button style={margin} onClick={handleLogout}>
+          logout
+        </button>
+      </div>
+      <h2>blog app</h2>
       <Notification />
-      <p>
-        {user.name} logged in <button onClick={handleLogout}>logout</button>
-      </p>
       <Routes>
         <Route path='/blogs/:id' element={<Blog />} />
         <Route path='/users/:id' element={<User />} />
