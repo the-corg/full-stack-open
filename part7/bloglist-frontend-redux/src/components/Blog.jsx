@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { initializeBlogs, like, remove } from '../reducers/blogReducer';
+import { initializeBlogs, like, remove, comment } from '../reducers/blogReducer';
 import { setNotification } from '../reducers/notificationReducer';
 
 const authorStr = author => (author === '' ? 'unknown author' : author);
@@ -12,6 +12,7 @@ const Blog = () => {
   const id = useParams().id;
   const blog = useSelector(({ blogs }) => blogs.find(b => b.id === id));
   const user = useSelector(({ user }) => user);
+  const [text, setText] = useState('');
 
   useEffect(() => {
     dispatch(initializeBlogs());
@@ -23,6 +24,21 @@ const Blog = () => {
     try {
       await dispatch(like(blog));
       dispatch(setNotification(`liked '${blog.title}' by ${authorStr(blog.author)}`));
+    } catch (exception) {
+      dispatch(setNotification(exception.response.data.error, true));
+    }
+  };
+
+  const commentBlog = async event => {
+    event.preventDefault();
+    if (text === '') {
+      dispatch(setNotification("Comment text can't be empty", true));
+      return;
+    }
+    try {
+      await dispatch(comment(blog, text));
+      dispatch(setNotification(`added comment to '${blog.title}' by ${authorStr(blog.author)}`));
+      setText('');
     } catch (exception) {
       dispatch(setNotification(exception.response.data.error, true));
     }
@@ -58,8 +74,18 @@ const Blog = () => {
         >
           remove
         </button>
-        <div style={{ display: blog.comments.length > 0 ? '' : 'none' }}>
+        <div>
           <h3>comments</h3>
+          <form onSubmit={commentBlog}>
+            <input
+              value={text}
+              type='text'
+              name='text'
+              onChange={({ target }) => setText(target.value)}
+              placeholder='new comment'
+            />
+            <button type='submit'>add comment</button>
+          </form>
           <ul>
             {blog.comments.map((comment, index) => (
               <li key={index}>{comment}</li>

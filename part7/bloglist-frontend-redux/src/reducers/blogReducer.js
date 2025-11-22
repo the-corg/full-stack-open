@@ -20,8 +20,7 @@ const blogSlice = createSlice({
   },
 });
 
-export const { updateBlog, appendBlog, setBlogs, deleteBlog } =
-  blogSlice.actions;
+export const { updateBlog, appendBlog, setBlogs, deleteBlog } = blogSlice.actions;
 
 export const initializeBlogs = () => async dispatch =>
   dispatch(setBlogs(await blogService.getAll()));
@@ -35,6 +34,12 @@ export const createBlog = (newBlog, user) => async dispatch => {
 export const like = blogToLike => async dispatch => {
   const updatedBlog = await blogService.like(blogToLike);
   updatedBlog.user = { ...blogToLike.user };
+  dispatch(updateBlog(updatedBlog));
+};
+
+export const comment = (blogToComment, text) => async dispatch => {
+  const updatedBlog = await blogService.comment(blogToComment.id, text);
+  updatedBlog.user = { ...blogToComment.user };
   dispatch(updateBlog(updatedBlog));
 };
 

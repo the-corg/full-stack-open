@@ -9,7 +9,7 @@ export const setToken = newToken => {
 export const getBlogs = async () => {
   const response = await fetch(baseUrl);
   if (!response.ok) {
-    throw new Error('Failed to fetch blogs' + response.status + ': ' + response.statusText);
+    throw new Error('Failed to fetch blogs: ' + response.status + ': ' + response.statusText);
   }
   return await response.json();
 };
@@ -41,9 +41,23 @@ export const like = async object => {
   };
   const response = await fetch(`${baseUrl}/${object.id}`, options);
   if (!response.ok) {
-    throw new Error('Failed to like blog' + response.status + ': ' + response.statusText);
+    throw new Error('Failed to like blog: ' + response.status + ': ' + response.statusText);
   }
   return await response.json();
+};
+
+export const comment = async ({ id, text }) => {
+  const options = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  };
+
+  const response = await fetch(`${baseUrl}/${id}/comments`, options);
+  if (response.ok) return await response.json();
+
+  const r = JSON.parse(await response.text());
+  throw new Error('Failed to add comment to blog (' + r.error + ')');
 };
 
 export const remove = async object => {
@@ -55,14 +69,14 @@ export const remove = async object => {
 
   if (!response.ok) {
     const r = JSON.parse(await response.text());
-    throw new Error('Failed to create blog (' + r.error + ')');
+    throw new Error('Failed to delete blog (' + r.error + ')');
   }
 };
 
 export const getUsers = async () => {
   const response = await fetch(usersUrl);
   if (!response.ok) {
-    throw new Error('Failed to fetch users' + response.status + ': ' + response.statusText);
+    throw new Error('Failed to fetch users: ' + response.status + ': ' + response.statusText);
   }
   return await response.json();
 };

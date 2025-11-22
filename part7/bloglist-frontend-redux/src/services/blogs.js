@@ -29,6 +29,12 @@ const like = async object => {
   return response.data;
 };
 
+const comment = async (id, text) => {
+  const comment = { text };
+  const response = await axios.post(`${baseUrl}/${id}/comments`, comment);
+  return response.data;
+};
+
 const remove = async object => {
   const config = {
     headers: { Authorization: token },
@@ -36,4 +42,4 @@ const remove = async object => {
   await axios.delete(`${baseUrl}/${object.id}`, config);
 };
 
-export default { getAll, create, setToken, like, remove };
+export default { getAll, create, setToken, like, comment, remove };

@@ -1,14 +1,16 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import NotificationContext from './NotificationContext';
 import UserContext from './UserContext';
-import { getBlogs, like, remove } from '../requests';
+import { getBlogs, like, remove, comment } from '../requests';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const Blog = () => {
   const id = useParams().id;
   const navigate = useNavigate();
+
+  const [text, setText] = useState('');
 
   const { notificationDispatch } = useContext(NotificationContext);
   const { user } = useContext(UserContext);
@@ -18,6 +20,19 @@ const Blog = () => {
     mutationFn: like,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['blogs'] });
+    },
+    onError: err => {
+      const payload = err.message;
+      notificationDispatch({ type: 'ERROR', payload });
+      setTimeout(() => notificationDispatch({ type: 'REMOVE', payload }), 5000);
+    },
+  });
+
+  const commentBlogMutation = useMutation({
+    mutationFn: comment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] });
+      setText('');
     },
     onError: err => {
       const payload = err.message;
@@ -56,6 +71,17 @@ const Blog = () => {
 
   if (!blog) return <div>Blog not found.</div>;
 
+  const commentBlog = async event => {
+    event.preventDefault();
+    if (text === '') {
+      const payload = "Comment text can't be empty";
+      notificationDispatch({ type: 'ERROR', payload });
+      setTimeout(() => notificationDispatch({ type: 'REMOVE', payload }), 5000);
+      return;
+    }
+    commentBlogMutation.mutate({ id: blog.id, text });
+  };
+
   const deleteBlog = blog.user?.username === user.username;
 
   return (
@@ -84,8 +110,18 @@ const Blog = () => {
         >
           remove
         </button>
-        <div style={{ display: blog.comments.length > 0 ? '' : 'none' }}>
+        <div>
           <h3>comments</h3>
+          <form onSubmit={commentBlog}>
+            <input
+              value={text}
+              type='text'
+              name='text'
+              onChange={({ target }) => setText(target.value)}
+              placeholder='new comment'
+            />
+            <button type='submit'>add comment</button>
+          </form>
           <ul>
             {blog.comments.map((comment, index) => (
               <li key={index}>{comment}</li>
