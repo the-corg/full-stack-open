@@ -1,24 +1,23 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Blog from './Blog';
 import Togglable from './Togglable';
 import CreateForm from './CreateForm';
 import { setNotification } from '../reducers/notificationReducer';
-import { initializeBlogs, createBlog, like, remove } from '../reducers/blogReducer';
+import { initializeBlogs, createBlog } from '../reducers/blogReducer';
+import { Link } from 'react-router-dom';
 
 const authorStr = author => (author === '' ? 'unknown author' : author);
 
 const Blogs = () => {
   const dispatch = useDispatch();
   const blogs = useSelector(({ blogs }) => blogs);
+  const user = useSelector(({ user }) => user);
 
   useEffect(() => {
     dispatch(initializeBlogs());
   }, [dispatch]);
-  
-  const createFormRef = useRef();
 
-  const user = useSelector(({ user }) => user);
+  const createFormRef = useRef();
 
   const addBlog = async newBlog => {
     try {
@@ -32,24 +31,12 @@ const Blogs = () => {
     return false;
   };
 
-  const likeBlog = async blog => {
-    try {
-      await dispatch(like(blog));
-      dispatch(setNotification(`liked '${blog.title}' by ${authorStr(blog.author)}`));
-    } catch (exception) {
-      dispatch(setNotification(exception.response.data.error, true));
-    }
-  };
-
-  const deleteBlog = async blog => {
-    if (!window.confirm(`Remove blog ${blog.title} by ${authorStr(blog.author)}?`)) return;
-
-    try {
-      await dispatch(remove(blog));
-      dispatch(setNotification(`deleted '${blog.title}' by ${authorStr(blog.author)}`));
-    } catch (exception) {
-      dispatch(setNotification(exception.response.data.error, true));
-    }
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5,
   };
 
   return (
@@ -60,14 +47,11 @@ const Blogs = () => {
       {blogs
         .toSorted((a, b) => b.likes - a.likes)
         .map(blog => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            likeBlog={async () => await likeBlog(blog)}
-            deleteBlog={
-              blog.user?.username === user.username ? async () => await deleteBlog(blog) : undefined
-            }
-          />
+          <div className='blog' style={blogStyle} key={blog.id}>
+            <Link to={`/blogs/${blog.id}`}>
+              {blog.title} by {authorStr(blog.author)}
+            </Link>
+          </div>
         ))}
     </div>
   );

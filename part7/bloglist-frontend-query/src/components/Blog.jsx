@@ -1,34 +1,85 @@
-import { useState } from 'react';
+import { useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import NotificationContext from './NotificationContext';
+import UserContext from './UserContext';
+import { getBlogs, like, remove } from '../requests';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-const Blog = ({ blog, likeBlog, deleteBlog }) => {
-  const [detailed, setDetailed] = useState(false);
+const Blog = () => {
+  const id = useParams().id;
+  const navigate = useNavigate();
 
-  const toggleDetailed = () => setDetailed(!detailed);
+  const { notificationDispatch } = useContext(NotificationContext);
+  const { user } = useContext(UserContext);
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  };
+  const queryClient = useQueryClient();
+  const likeBlogMutation = useMutation({
+    mutationFn: like,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] });
+    },
+    onError: err => {
+      const payload = err.message;
+      notificationDispatch({ type: 'ERROR', payload });
+      setTimeout(() => notificationDispatch({ type: 'REMOVE', payload }), 5000);
+    },
+  });
 
-  const showWhenDetailed = { display: detailed ? '' : 'none' };
+  const deleteBlogMutation = useMutation({
+    mutationFn: remove,
+    onSuccess: (data, deletedBlog) => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] });
+
+      navigate('/');
+
+      const payload = `blog ${deletedBlog.title} by ${deletedBlog.author === '' ? 'unknown author' : deletedBlog.author} deleted successfully`;
+      notificationDispatch({ type: 'NOTIFICATION', payload });
+      setTimeout(() => notificationDispatch({ type: 'REMOVE', payload }), 5000);
+    },
+    onError: err => {
+      const payload = err.message;
+      notificationDispatch({ type: 'ERROR', payload });
+      setTimeout(() => notificationDispatch({ type: 'REMOVE', payload }), 5000);
+    },
+  });
+
+  const result = useQuery({
+    queryKey: ['blogs'],
+    queryFn: getBlogs,
+  });
+
+  if (result.isLoading) {
+    return <div>loading data...</div>;
+  }
+  const blog = result.data.find(b => b.id === id);
+
+  const deleteBlog = blog.user?.username === user.username;
 
   return (
-    <div className='blog' style={blogStyle}>
+    <div>
+      <h2>
+        {blog.title} by {blog.author === '' ? 'unknown author' : blog.author}
+      </h2>
       <div>
-        {blog.title} {blog.author}{' '}
-        <button onClick={toggleDetailed}>{detailed ? 'hide' : 'show'}</button>
-      </div>
-
-      <div style={showWhenDetailed}>
-        <div>{blog.url}</div>
+        <a href={blog.url}>{blog.url}</a>
         <div>
-          likes {blog.likes} <button onClick={likeBlog}>like</button>
+          {blog.likes} likes{' '}
+          <button onClick={async () => await likeBlogMutation.mutate(blog)}>like</button>
         </div>
-        <div>{blog.user?.name ?? 'Unknown user'}</div>
-        <button style={{ display: deleteBlog ? '' : 'none' }} onClick={deleteBlog}>
+        <div>added by {blog.user?.name ?? 'Unknown user'}</div>
+        <button
+          style={{ display: deleteBlog ? '' : 'none' }}
+          onClick={async () => {
+            if (
+              !window.confirm(
+                `Remove blog ${blog.title} by ${blog.author === '' ? 'unknown author' : blog.author}?`,
+              )
+            )
+              return;
+            deleteBlogMutation.mutate(blog);
+          }}
+        >
           remove
         </button>
       </div>

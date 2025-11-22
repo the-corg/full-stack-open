@@ -1,36 +1,60 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { initializeBlogs, like, remove } from '../reducers/blogReducer';
+import { setNotification } from '../reducers/notificationReducer';
 
-const Blog = ({ blog, likeBlog, deleteBlog }) => {
-  const [detailed, setDetailed] = useState(false);
+const authorStr = author => (author === '' ? 'unknown author' : author);
 
-  const toggleDetailed = () => setDetailed(!detailed);
+const Blog = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const id = useParams().id;
+  const blog = useSelector(({ blogs }) => blogs.find(b => b.id === id));
+  const user = useSelector(({ user }) => user);
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
+  useEffect(() => {
+    dispatch(initializeBlogs());
+  }, [dispatch]);
+
+  if (!blog) return <div>Blog not found.</div>;
+
+  const likeBlog = async blog => {
+    try {
+      await dispatch(like(blog));
+      dispatch(setNotification(`liked '${blog.title}' by ${authorStr(blog.author)}`));
+    } catch (exception) {
+      dispatch(setNotification(exception.response.data.error, true));
+    }
   };
 
-  const showWhenDetailed = { display: detailed ? '' : 'none' };
+  const deleteBlog = async blog => {
+    if (!window.confirm(`Remove blog ${blog.title} by ${authorStr(blog.author)}?`)) return;
+
+    try {
+      dispatch(setNotification(`deleted '${blog.title}' by ${authorStr(blog.author)}`));
+      navigate('/');
+      await dispatch(remove(blog));
+    } catch (exception) {
+      dispatch(setNotification(exception.response.data.error, true));
+    }
+  };
 
   return (
-    <div className='blog' style={blogStyle}>
-      <div>
-        {blog.title} {blog.author}{' '}
-        <button onClick={toggleDetailed}>{detailed ? 'hide' : 'show'}</button>
-      </div>
+    <div>
+      <h2>
+        {blog.title} by {authorStr(blog.author)}
+      </h2>
 
-      <div style={showWhenDetailed}>
-        <div>{blog.url}</div>
+      <div>
+        <a href={blog.url}>{blog.url}</a>
         <div>
-          likes {blog.likes} <button onClick={likeBlog}>like</button>
+          {blog.likes} likes <button onClick={async () => await likeBlog(blog)}>like</button>
         </div>
-        <div>{blog.user?.name ?? 'Unknown user'}</div>
+        <div>added by {blog.user?.name ?? 'Unknown user'}</div>
         <button
-          style={{ display: deleteBlog ? '' : 'none' }}
-          onClick={deleteBlog}
+          style={{ display: blog.user?.username === user.username ? '' : 'none' }}
+          onClick={async () => deleteBlog(blog)}
         >
           remove
         </button>

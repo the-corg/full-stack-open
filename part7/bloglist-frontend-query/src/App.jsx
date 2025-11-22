@@ -7,6 +7,7 @@ import Users from './components/Users';
 import Blogs from './components/Blogs';
 import { Routes, Route } from 'react-router-dom';
 import User from './components/User';
+import Blog from './components/Blog';
 
 const App = () => {
   const { user, userDispatch } = useContext(UserContext);
@@ -35,6 +36,7 @@ const App = () => {
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </p>
       <Routes>
+        <Route path='/blogs/:id' element={<Blog />} />
         <Route path='/users/:id' element={<User />} />
         <Route path='/users' element={<Users />} />
         <Route path='/blogs' element={<Blogs />} />
