@@ -1,0 +1,25 @@
+{
+  "name": "bloglist-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development node --watch index.js",
+    "test": "cross-env NODE_ENV=test node --test",
+    "start:test": "cross-env NODE_ENV=test node --watch index.js"
+  },
+  "author": "Alexandra Sidorova",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^17.0.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.1"
+  },
+  "devDependencies": {
+    "supertest": "^7.1.3"
+  }
+}

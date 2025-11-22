@@ -84,6 +84,14 @@ const Blog = () => {
         >
           remove
         </button>
+        <div style={{ display: blog.comments.length > 0 ? '' : 'none' }}>
+          <h3>comments</h3>
+          <ul>
+            {blog.comments.map((comment, index) => (
+              <li key={index}>{comment}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
