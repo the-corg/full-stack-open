@@ -70,6 +70,12 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 - `part7/bloglist-frontend-query`: Exercises 7.9-7.21, updating the React app developed in part 5 to use React Query (TanStack Query) and Context for state management, React Router for views and navigation, and Styled componenents for styling
 - `part7/bloglist-frontend-redux`: Exercises 7.9-7.21, updating the React app developed in part 5 to use Redux for state management, React Router for views and navigation, and Material UI for styling 
 
+## Part 8. GraphQL
+### a. GraphQL-server
+- `part8/library-backend`: Exercises 8.1-8.7, a simple GraphQL backend for a library 
+
+In progress...
+
 ---
 
 ![Certificate of completion](certificate-fullstack.png)
