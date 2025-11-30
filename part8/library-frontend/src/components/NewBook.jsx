@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useMutation } from '@apollo/client/react';
+import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries';
 
 const NewBook = () => {
   const [title, setTitle] = useState('');
@@ -7,10 +9,19 @@ const NewBook = () => {
   const [genre, setGenre] = useState('');
   const [genres, setGenres] = useState([]);
 
+  const [createBook] = useMutation(CREATE_BOOK, {
+    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+  });
+
   const submit = async event => {
     event.preventDefault();
 
-    console.log('add book...');
+    if (!title | !author | !published) {
+      alert('Please fill in all fields');
+      return;
+    }
+
+    createBook({ variables: { title, author, published, genres } });
 
     setTitle('');
     setPublished('');
@@ -41,7 +52,7 @@ const NewBook = () => {
           <input
             type='number'
             value={published}
-            onChange={({ target }) => setPublished(target.value)}
+            onChange={({ target }) => setPublished(parseInt(target.value))}
           />
         </div>
         <div>
