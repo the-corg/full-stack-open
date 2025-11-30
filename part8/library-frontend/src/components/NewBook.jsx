@@ -2,29 +2,35 @@ import { useState } from 'react';
 import { useMutation } from '@apollo/client/react';
 import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries';
 
-const NewBook = () => {
+const NewBook = ({ setError }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
-  const [published, setPublished] = useState('');
+  const [year, setYear] = useState('');
   const [genre, setGenre] = useState('');
   const [genres, setGenres] = useState([]);
 
   const [createBook] = useMutation(CREATE_BOOK, {
     refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+    onError: error => setError(error.message),
   });
 
   const submit = async event => {
     event.preventDefault();
 
-    if (!title | !author | !published) {
-      alert('Please fill in all fields');
+    if (!title | !author | !year) {
+      setError("Title, Author, and Published can't be empty");
+      return;
+    }
+    const published = parseInt(year);
+    if (Number.isNaN(published)) {
+      setError('Please enter a valid publication year');
       return;
     }
 
     createBook({ variables: { title, author, published, genres } });
 
     setTitle('');
-    setPublished('');
+    setYear('');
     setAuthor('');
     setGenres([]);
     setGenre('');
@@ -49,11 +55,7 @@ const NewBook = () => {
         </div>
         <div>
           published
-          <input
-            type='number'
-            value={published}
-            onChange={({ target }) => setPublished(parseInt(target.value))}
-          />
+          <input type='number' value={year} onChange={({ target }) => setYear(target.value)} />
         </div>
         <div>
           <input value={genre} onChange={({ target }) => setGenre(target.value)} />
