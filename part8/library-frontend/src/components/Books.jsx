@@ -42,7 +42,7 @@ const Books = () => {
             {g}
           </button>
         ))}
-        <button onClick={() => setGenre(null)}>All genres</button>
+        <button onClick={() => setGenre(null)}>all genres</button>
       </div>
     </div>
   );

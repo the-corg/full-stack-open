@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Authors from './components/Authors';
 import BirthyearForm from './components/BirthyearForm';
 import Books from './components/Books';
+import Recommend from './components/Recommend';
 import NewBook from './components/NewBook';
 import Notify from './components/Notify';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
@@ -54,6 +55,10 @@ const App = () => {
               set birthyear
             </Link>
             {separator}
+            <Link style={linkStyle} to='/recommend'>
+              recommend
+            </Link>
+            {separator}
             <button style={buttonStyle} onClick={logout}>
               logout
             </button>
@@ -70,6 +75,7 @@ const App = () => {
         <Route path='/login' element={<LoginForm setError={notify} setToken={setToken} />} />
         <Route path='/newbook' element={<NewBook setError={notify} />} />
         <Route path='/birthyear' element={<BirthyearForm setError={notify} />} />
+        <Route path='/recommend' element={<Recommend />} />
         <Route path='/' element={<Authors />} />
       </Routes>
     </>
