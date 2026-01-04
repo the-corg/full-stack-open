@@ -7,7 +7,8 @@ import NewBook from './components/NewBook';
 import Notify from './components/Notify';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
-import { useApolloClient } from '@apollo/client/react';
+import { useApolloClient, useSubscription } from '@apollo/client/react';
+import { BOOK_ADDED } from './queries';
 
 const App = () => {
   const navigate = useNavigate();
@@ -20,6 +21,13 @@ const App = () => {
       setErrorMessage(null);
     }, 5000);
   };
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      console.log(data);
+      window.alert('A book was added!');
+    },
+  });
 
   const logout = async () => {
     localStorage.clear();
