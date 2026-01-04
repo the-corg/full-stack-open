@@ -73,11 +73,11 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ## Part 8. GraphQL
 ### a. GraphQL-server
 ### b. React and GraphQL
-- `part8/library-frontend`: Exercises 8.8-8.12, a simple React app that uses the GraphQL server created in exercises 8.1-8.7 via Apollo Client
 ### c. Database and user administration
 - `part8/library-backend`: Exercises 8.1-8.7 and 8.13-8.16, a simple GraphQL backend server for a library, implemented using Apollo Server, that uses MongoDB via Mongoose to store data
 ### d. Login and updating the cache
-
+- `part8/library-frontend`: Exercises 8.8-8.12 and 8.17-8.22, a simple React app that uses the GraphQL server created in exercises 8.1-8.7 and 8.13-8.16 via Apollo Client
+### e. Fragments and subscriptions
 In progress...
 
 ---
