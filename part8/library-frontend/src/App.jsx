@@ -9,6 +9,7 @@ import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
 import { useApolloClient, useSubscription } from '@apollo/client/react';
 import { BOOK_ADDED } from './queries';
+import { addBookToCache } from './utils/apolloCache';
 
 const App = () => {
   const navigate = useNavigate();
@@ -24,8 +25,9 @@ const App = () => {
 
   useSubscription(BOOK_ADDED, {
     onData: ({ data }) => {
-      console.log(data);
-      window.alert('A book was added!');
+      const addedBook = data.data.bookAdded;
+      notify(`${addedBook.title} added`);
+      addBookToCache(client.cache, addedBook);
     },
   });
 
