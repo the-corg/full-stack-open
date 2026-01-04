@@ -2,6 +2,7 @@
   "name": "library-backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
@@ -12,10 +13,17 @@
   "description": "",
   "dependencies": {
     "@apollo/server": "^5.2.0",
+    "@as-integrations/express5": "^1.1.2",
+    "@graphql-tools/schema": "^10.0.30",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
+    "express": "^5.2.1",
     "graphql": "^16.12.0",
+    "graphql-subscriptions": "^3.0.0",
+    "graphql-ws": "^6.0.6",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.0.0",
-    "mongoose-unique-validator": "^4.0.1"
+    "mongoose-unique-validator": "^4.0.1",
+    "ws": "^8.18.3"
   }
 }
