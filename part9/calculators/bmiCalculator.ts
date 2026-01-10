@@ -3,7 +3,7 @@ interface BmiInputValues {
   massInKg: number;
 }
 
-const calculateBmi = (heightInCm: number, massInKg: number): string => {
+export const calculateBmi = (heightInCm: number, massInKg: number): string => {
   const bmi: number = (massInKg * 10000) / (heightInCm * heightInCm);
 
   if (bmi < 16) return 'Underweight (Severe thinness)';
@@ -29,13 +29,15 @@ const parseBmiArguments = (args: string[]): BmiInputValues => {
   };
 };
 
-try {
-  const { heightInCm, massInKg } = parseBmiArguments(process.argv);
-  console.log(calculateBmi(heightInCm, massInKg));
-} catch (error: unknown) {
-  let errorMessage = 'Something is wrong.';
-  if (error instanceof Error) {
-    errorMessage += ' Error: ' + error.message;
+if (require.main === module) {
+  try {
+    const { heightInCm, massInKg } = parseBmiArguments(process.argv);
+    console.log(calculateBmi(heightInCm, massInKg));
+  } catch (error: unknown) {
+    let errorMessage = 'Something is wrong.';
+    if (error instanceof Error) {
+      errorMessage += ' Error: ' + error.message;
+    }
+    console.log(errorMessage);
   }
-  console.log(errorMessage);
 }
