@@ -1,3 +1,8 @@
+interface ExerciseInputValues {
+  target: number;
+  dailyExerciseHours: number[];
+}
+
 type Rating = 1 | 2 | 3;
 
 interface Result {
@@ -30,4 +35,27 @@ const calculateExercises = (dailyExerciseHours: number[], target: number): Resul
   };
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+const parseExerciseArguments = (args: string[]): ExerciseInputValues => {
+  if (args.length < 4) throw new Error('Not enough arguments');
+
+  if (args.slice(2, args.length).some(a => isNaN(Number(a))))
+    throw new Error(
+      'Please provide only numbers as arguments. The first argument should be your target'
+    );
+
+  return {
+    target: Number(args[2]),
+    dailyExerciseHours: args.slice(3, args.length).map(a => Number(a)),
+  };
+};
+
+try {
+  const { target, dailyExerciseHours } = parseExerciseArguments(process.argv);
+  console.log(calculateExercises(dailyExerciseHours, target));
+} catch (error: unknown) {
+  let errorMessage = 'Something is wrong.';
+  if (error instanceof Error) {
+    errorMessage += ' Error: ' + error.message;
+  }
+  console.log(errorMessage);
+}

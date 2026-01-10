@@ -1,5 +1,10 @@
-const calculateBmi = (height_cm: number, mass_kg: number): string => {
-  const bmi: number = (mass_kg * 10000) / (height_cm * height_cm);
+interface BmiInputValues {
+  heightInCm: number;
+  massInKg: number;
+}
+
+const calculateBmi = (heightInCm: number, massInKg: number): string => {
+  const bmi: number = (massInKg * 10000) / (heightInCm * heightInCm);
 
   if (bmi < 16) return 'Underweight (Severe thinness)';
   if (bmi < 17) return 'Underweight (Moderate thinness)';
@@ -11,4 +16,26 @@ const calculateBmi = (height_cm: number, mass_kg: number): string => {
   return 'Obese (Class III)';
 };
 
-console.log(calculateBmi(180, 74));
+const parseBmiArguments = (args: string[]): BmiInputValues => {
+  if (args.length < 4) throw new Error('Not enough arguments');
+  if (args.length > 4) throw new Error('Too many arguments');
+
+  if (args.slice(2, args.length).some(a => isNaN(Number(a))))
+    throw new Error('Please provide two numbers as arguments: height in cm and body mass in kg');
+
+  return {
+    heightInCm: Number(args[2]),
+    massInKg: Number(args[3]),
+  };
+};
+
+try {
+  const { heightInCm, massInKg } = parseBmiArguments(process.argv);
+  console.log(calculateBmi(heightInCm, massInKg));
+} catch (error: unknown) {
+  let errorMessage = 'Something is wrong.';
+  if (error instanceof Error) {
+    errorMessage += ' Error: ' + error.message;
+  }
+  console.log(errorMessage);
+}
