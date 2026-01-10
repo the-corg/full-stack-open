@@ -81,15 +81,17 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 
 ## Part 9. TypeScript
 ### a. Background and introduction
+### b. First steps with TypeScript
 
 In progress...
 
 ---
 
-Certificate of completion for parts 1-7:
+**Certificate of completion for parts 0-7** ([verification link](https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/b9948d0ef83df67a9a4113dad9752af5)):
 ![Certificate of completion](certificate-fullstack.png)
-[Certificate verification link](https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/b9948d0ef83df67a9a4113dad9752af5)
 
-Certificate of completion for part 8:
+---
+
+**Certificate of completion for part 8** ([verification link](https://studies.cs.helsinki.fi/stats/api/certificate/fs-graphql/en/5e5bbf02032381fed7b97c52fa3c6cd1)):
 ![Certificate of completion](certificate-graphql.png)
-[Certificate verification link](https://studies.cs.helsinki.fi/stats/api/certificate/fs-graphql/en/5e5bbf02032381fed7b97c52fa3c6cd1)
+
