@@ -82,6 +82,8 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ## Part 9. TypeScript
 ### a. Background and introduction
 ### b. First steps with TypeScript
+- `part9/calculators`: Exercises 9.1-9.7, a simple Node/Express project written in TypeScript for calculating the body mass index and exercise statistics 
+### c. Typing an Express app
 
 In progress...
 

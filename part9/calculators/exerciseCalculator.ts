@@ -21,7 +21,7 @@ const ratingDescriptions = [
   'impressive, most impressive',
 ];
 
-const calculateExercises = (dailyExerciseHours: number[], target: number): Result => {
+export const calculateExercises = (dailyExerciseHours: number[], target: number): Result => {
   const average: number = dailyExerciseHours.reduce((a, b) => a + b) / dailyExerciseHours.length;
   const rating: Rating = average >= target ? 3 : average >= 0.5 * target ? 2 : 1;
   return {
@@ -40,7 +40,7 @@ const parseExerciseArguments = (args: string[]): ExerciseInputValues => {
 
   if (args.slice(2, args.length).some(a => isNaN(Number(a))))
     throw new Error(
-      'Please provide only numbers as arguments. The first argument should be your target'
+      'Please provide only numbers as arguments. The first argument should be your target.'
     );
 
   return {
@@ -49,13 +49,15 @@ const parseExerciseArguments = (args: string[]): ExerciseInputValues => {
   };
 };
 
-try {
-  const { target, dailyExerciseHours } = parseExerciseArguments(process.argv);
-  console.log(calculateExercises(dailyExerciseHours, target));
-} catch (error: unknown) {
-  let errorMessage = 'Something is wrong.';
-  if (error instanceof Error) {
-    errorMessage += ' Error: ' + error.message;
+if (require.main === module) {
+  try {
+    const { target, dailyExerciseHours } = parseExerciseArguments(process.argv);
+    console.log(calculateExercises(dailyExerciseHours, target));
+  } catch (error: unknown) {
+    let errorMessage = 'Something is wrong.';
+    if (error instanceof Error) {
+      errorMessage += ' Error: ' + error.message;
+    }
+    console.log(errorMessage);
   }
-  console.log(errorMessage);
 }

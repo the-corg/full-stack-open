@@ -7,16 +7,22 @@
     "start": "ts-node index.ts",
     "dev": "ts-node-dev index.ts",
     "calculateBmi": "ts-node bmiCalculator.ts",
-    "calculateExercises": "ts-node exerciseCalculator.ts"
+    "calculateExercises": "ts-node exerciseCalculator.ts",
+    "lint": "eslint ."
   },
   "author": "Alexandra Sidorova",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@stylistic/eslint-plugin": "^5.7.0",
+    "@types/eslint__js": "^8.42.3",
     "@types/express": "^5.0.6",
+    "eslint": "^9.39.2",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.52.0"
   },
   "dependencies": {
     "express": "^5.2.1"

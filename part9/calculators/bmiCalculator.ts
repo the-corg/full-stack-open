@@ -3,17 +3,23 @@ interface BmiInputValues {
   massInKg: number;
 }
 
+const bmiTable = [
+  { limit: 16, label: 'Underweight (Severe thinness)' },
+  { limit: 17, label: 'Underweight (Moderate thinness)' },
+  { limit: 18.5, label: 'Underweight (Mild thinness)' },
+  { limit: 25, label: 'Normal range' },
+  { limit: 30, label: 'Overweight (Pre-obese)' },
+  { limit: 35, label: 'Obese (Class I)' },
+  { limit: 40, label: 'Obese (Class II)' },
+  { limit: Infinity, label: 'Obese (Class III)' },
+];
+
 export const calculateBmi = (heightInCm: number, massInKg: number): string => {
   const bmi: number = (massInKg * 10000) / (heightInCm * heightInCm);
 
-  if (bmi < 16) return 'Underweight (Severe thinness)';
-  if (bmi < 17) return 'Underweight (Moderate thinness)';
-  if (bmi < 18.5) return 'Underweight (Mild thinness)';
-  if (bmi < 25) return 'Normal range';
-  if (bmi < 30) return 'Overweight (Pre-obese)';
-  if (bmi < 35) return 'Obese (Class I)';
-  if (bmi < 40) return 'Obese (Class II)';
-  return 'Obese (Class III)';
+  for (let i = 0; i < bmiTable.length; i++) if (bmi < bmiTable[i].limit) return bmiTable[i].label;
+
+  return 'Error. BMI greater than Infinity. Please contact emergency services immediately.';
 };
 
 const parseBmiArguments = (args: string[]): BmiInputValues => {
