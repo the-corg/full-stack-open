@@ -17,7 +17,7 @@ const getSsnlessPatients = (): SsnlessPatient[] => {
 };
 
 const addPatient = (patient: NewPatient): Patient => {
-  const id: string = uuid();
+  const id = uuid();
   const newPatient = {
     id,
     ...patient,
