@@ -1,9 +1,18 @@
-export type Weather = 'sunny' | 'rainy' | 'cloudy' | 'windy' | 'stormy';
-
-export type Visibility = 'great' | 'good' | 'ok' | 'poor';
-
 export interface Diagnosis {
   code: string;
   name: string;
   latin?: string;
 }
+
+export type Gender = 'male' | 'female' | 'other';
+
+export interface Patient {
+  id: string;
+  name: string;
+  dateOfBirth: string;
+  ssn: string;
+  gender: Gender;
+  occupation: string;
+}
+
+export type SsnlessPatient = Omit<Patient, 'ssn'>;
