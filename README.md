@@ -86,6 +86,7 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ### c. Typing an Express app
 - `part9/patientor-backend`: Exercises 9.8-9.14, a simple medical record application for doctors who handle diagnoses and basic health information of their patients
 - `part9/patientor-frontend`: the pre-existing frontend for `part9/patientor-backend` that was provided as part of the course materials
+### d. React with types
 
 In progress...
 
