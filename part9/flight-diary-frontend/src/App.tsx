@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import type { Entry, NewEntry, Visibility, Weather } from './types';
 import { getAllEntries, createEntry } from './diaryEntryService';
+import axios from 'axios';
+import Notification from './Notification';
 
 const App = () => {
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -8,6 +10,7 @@ const App = () => {
   const [visibility, setVisibility] = useState<Visibility>('good');
   const [weather, setWeather] = useState<Weather>('sunny');
   const [comment, setComment] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     getAllEntries().then(data => {
@@ -15,13 +18,24 @@ const App = () => {
     });
   }, []);
 
-  const entryCreation = (event: React.SyntheticEvent) => {
+  const entryCreation = async (event: React.SyntheticEvent) => {
     event.preventDefault();
 
-    const newEntry: NewEntry = { date, visibility, weather, comment };
-    createEntry(newEntry).then(data => {
+    try {
+      const newEntry: NewEntry = { date, visibility, weather, comment };
+      const data = await createEntry(newEntry);
       setEntries(entries.concat(data));
-    });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(error.response?.data ?? 'Unknown axios error');
+        setTimeout(() => setErrorMessage(''), 3000);
+        return;
+      } else {
+        setErrorMessage('Unknown error');
+        setTimeout(() => setErrorMessage(''), 3000);
+        return;
+      }
+    }
 
     setDate('');
     setVisibility('good');
@@ -32,15 +46,30 @@ const App = () => {
   return (
     <div>
       <h2>Add new entry</h2>
+      <Notification errorMessage={errorMessage} />
       <form onSubmit={entryCreation}>
-        <input value={date} onChange={event => setDate(event.target.value)} />
-        <input
-          value={visibility}
-          onChange={event => setVisibility(event.target.value as Visibility)}
-        />
-        <input value={weather} onChange={event => setWeather(event.target.value as Weather)} />
-        <input value={comment} onChange={event => setComment(event.target.value)} />
-        <button type='submit'>add</button>
+        <div>
+          date:
+          <input value={date} onChange={event => setDate(event.target.value)} />
+        </div>
+        <div>
+          visibility:
+          <input
+            value={visibility}
+            onChange={event => setVisibility(event.target.value as Visibility)}
+          />
+        </div>
+        <div>
+          weather:
+          <input value={weather} onChange={event => setWeather(event.target.value as Weather)} />
+        </div>
+        <div>
+          comment:
+          <input value={comment} onChange={event => setComment(event.target.value)} />
+        </div>
+        <div>
+          <button type='submit'>add</button>
+        </div>
       </form>
       <h2>Diary entries</h2>
       <div>
