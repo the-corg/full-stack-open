@@ -87,6 +87,10 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 - `part9/patientor-backend`: Exercises 9.8-9.14, a simple medical record application for doctors who handle diagnoses and basic health information of their patients
 - `part9/patientor-frontend`: the pre-existing frontend for `part9/patientor-backend` that was provided as part of the course materials
 ### d. React with types
+- `part9/courseinfo`: Exercises 9.15-9.16, a simple app illustrating the use of TypeScript with React
+- `part9/flight-diary-frontend`: Exercises 9.17-9.20, a simple app for managing flight diaries
+- `part9/flight-diary-backend`: the pre-existing backend for `part9/flight-diary-frontend` that was provided as part of the course materials
+### e. Grande finale: Patientor
 
 In progress...
 

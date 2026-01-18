@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { Entry, NewEntry, Visibility, Weather } from './types';
+import { weatherValues, visibilityValues } from './types';
 import { getAllEntries, createEntry } from './diaryEntryService';
 import axios from 'axios';
 import Notification from './Notification';
@@ -49,23 +50,39 @@ const App = () => {
       <Notification errorMessage={errorMessage} />
       <form onSubmit={entryCreation}>
         <div>
-          date:
-          <input value={date} onChange={event => setDate(event.target.value)} />
+          date: <input type='date' value={date} onChange={event => setDate(event.target.value)} />
         </div>
         <div>
           visibility:
-          <input
-            value={visibility}
-            onChange={event => setVisibility(event.target.value as Visibility)}
-          />
+          {visibilityValues.map(v => (
+            <label key={v}>
+              <input
+                type='radio'
+                name='visibility'
+                checked={visibility === v}
+                onChange={() => setVisibility(v)}
+              />
+              {v + ' '}
+            </label>
+          ))}
         </div>
+
         <div>
           weather:
-          <input value={weather} onChange={event => setWeather(event.target.value as Weather)} />
+          {weatherValues.map(w => (
+            <label key={w}>
+              <input
+                type='radio'
+                name='weather'
+                checked={weather === w}
+                onChange={() => setWeather(w)}
+              />
+              {w + ' '}
+            </label>
+          ))}
         </div>
         <div>
-          comment:
-          <input value={comment} onChange={event => setComment(event.target.value)} />
+          comment: <input value={comment} onChange={event => setComment(event.target.value)} />
         </div>
         <div>
           <button type='submit'>add</button>
