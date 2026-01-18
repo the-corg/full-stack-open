@@ -7,6 +7,7 @@ export const NewPatientSchema = z.object({
   ssn: z.string().trim().min(1, { message: 'SSN is missing' }),
   gender: z.enum(Gender),
   occupation: z.string().trim().min(1, { message: 'Occupation is missing' }),
+  entries: z.array(z.object({}).loose()),
 });
 
 export const toNewPatient = (object: unknown): NewPatient => NewPatientSchema.parse(object);
