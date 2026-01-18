@@ -9,3 +9,5 @@ export interface Entry {
   visibility: Visibility;
   comment: string;
 }
+
+export type NewEntry = Omit<Entry, 'id'>;
