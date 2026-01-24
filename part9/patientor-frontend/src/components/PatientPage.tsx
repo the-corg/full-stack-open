@@ -24,7 +24,7 @@ const PatientPage = () => {
   if (!patient) return <p>Patient not found</p>;
 
   return (
-    <Box>
+    <Box margin={'10px 0'}>
       <Typography align='left' margin={'20px 0'} variant='h5'>
         {patient.name}{' '}
         {patient.gender === Gender.Male ? (
@@ -38,6 +38,23 @@ const PatientPage = () => {
       <Typography variant='body1'>date of birth: {patient.dateOfBirth}</Typography>
       <Typography variant='body1'>ssn: {patient.ssn}</Typography>
       <Typography variant='body1'>occupation: {patient.occupation}</Typography>
+      <Box margin={'10px 0'}>
+        <Typography variant='h6'>entries</Typography>
+        {patient.entries.map(entry => (
+          <Box key={entry.id}>
+            <Typography variant='body2'>
+              {entry.date} <i>{entry.description}</i>
+            </Typography>
+            <ul>
+              {entry.diagnosisCodes?.map(code => (
+                <li key={code}>
+                  <Typography variant='body2'>{code}</Typography>
+                </li>
+              ))}
+            </ul>
+          </Box>
+        ))}
+      </Box>
     </Box>
   );
 };
