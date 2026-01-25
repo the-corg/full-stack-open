@@ -7,7 +7,11 @@ import MaleIcon from '@mui/icons-material/Male';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 import FemaleIcon from '@mui/icons-material/Female';
 
-const PatientPage = () => {
+type PatientPageProps = {
+  diagnoses: Map<string, string>;
+};
+
+const PatientPage = ({ diagnoses }: PatientPageProps) => {
   const [patient, setPatient] = useState<Patient | undefined>(undefined);
   const id = useParams().id;
 
@@ -48,7 +52,9 @@ const PatientPage = () => {
             <ul>
               {entry.diagnosisCodes?.map(code => (
                 <li key={code}>
-                  <Typography variant='body2'>{code}</Typography>
+                  <Typography variant='body2'>
+                    {code} {diagnoses.has(code) && diagnoses.get(code)}
+                  </Typography>
                 </li>
               ))}
             </ul>
