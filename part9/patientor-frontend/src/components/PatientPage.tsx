@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import MaleIcon from '@mui/icons-material/Male';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 import FemaleIcon from '@mui/icons-material/Female';
+import EntryDetails from './EntryDetails';
+
 
 type PatientPageProps = {
   diagnoses: Map<string, string>;
@@ -45,20 +47,7 @@ const PatientPage = ({ diagnoses }: PatientPageProps) => {
       <Box margin={'10px 0'}>
         <Typography variant='h6'>entries</Typography>
         {patient.entries.map(entry => (
-          <Box key={entry.id}>
-            <Typography variant='body2'>
-              {entry.date} <i>{entry.description}</i>
-            </Typography>
-            <ul>
-              {entry.diagnosisCodes?.map(code => (
-                <li key={code}>
-                  <Typography variant='body2'>
-                    {code} {diagnoses.has(code) && diagnoses.get(code)}
-                  </Typography>
-                </li>
-              ))}
-            </ul>
-          </Box>
+          <EntryDetails key={entry.id} entry={entry} diagnoses={diagnoses} />
         ))}
       </Box>
     </Box>
