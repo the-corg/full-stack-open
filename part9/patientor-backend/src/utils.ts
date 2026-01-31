@@ -1,40 +1,57 @@
 import { Gender, NewPatient, HealthCheckRating } from './types';
 import { z } from 'zod';
 
-const DiagnosisCodeSchema = z.string();
-
-const BaseEntrySchema = z.object({
-  id: z.string(),
-  description: z.string(),
-  date: z.iso.date(),
-  specialist: z.string(),
-  diagnosisCodes: z.array(DiagnosisCodeSchema).optional(),
-});
-
-const HealthCheckEntrySchema = BaseEntrySchema.extend({
-  type: z.literal('HealthCheck'),
-  healthCheckRating: z.enum(HealthCheckRating),
-});
+const DiagnosisCodeSchema = z.string().trim().min(1, { message: 'Diagnosis code is missing' });
 
 const SickLeaveSchema = z.object({
   startDate: z.iso.date(),
   endDate: z.iso.date(),
 });
 
-const OccupationalHealthcareEntrySchema = BaseEntrySchema.extend({
+const DischargeSchema = z.object({
+  date: z.iso.date(),
+  criteria: z.string().trim().min(1, { message: 'Discharge criteria are missing' }),
+});
+
+const NewBaseEntrySchema = z.object({
+  description: z.string().trim().min(1, { message: 'Description is missing' }),
+  date: z.iso.date(),
+  specialist: z.string().trim().min(1, { message: 'Specialist is missing' }),
+  diagnosisCodes: z.array(DiagnosisCodeSchema).optional(),
+});
+
+const NewHealthCheckEntrySchema = NewBaseEntrySchema.extend({
+  type: z.literal('HealthCheck'),
+  healthCheckRating: z.enum(HealthCheckRating),
+});
+
+const NewOccupationalHealthcareEntrySchema = NewBaseEntrySchema.extend({
   type: z.literal('OccupationalHealthcare'),
-  employerName: z.string(),
+  employerName: z.string().trim().min(1, { message: 'Employer name is missing' }),
   sickLeave: SickLeaveSchema.optional(),
 });
 
-const DischargeSchema = z.object({
-  date: z.iso.date(),
-  criteria: z.string(),
-});
-
-const HospitalEntrySchema = BaseEntrySchema.extend({
+const NewHospitalEntrySchema = NewBaseEntrySchema.extend({
   type: z.literal('Hospital'),
   discharge: DischargeSchema,
+});
+
+export const NewEntrySchema = z.discriminatedUnion('type', [
+  NewHealthCheckEntrySchema,
+  NewOccupationalHealthcareEntrySchema,
+  NewHospitalEntrySchema,
+]);
+
+const HealthCheckEntrySchema = NewHealthCheckEntrySchema.extend({
+  id: z.string(),
+});
+
+const OccupationalHealthcareEntrySchema = NewOccupationalHealthcareEntrySchema.extend({
+  id: z.string(),
+});
+
+const HospitalEntrySchema = NewHospitalEntrySchema.extend({
+  id: z.string(),
 });
 
 export const EntrySchema = z.discriminatedUnion('type', [
