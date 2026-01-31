@@ -47,7 +47,7 @@ const PatientPage = ({ diagnoses }: PatientPageProps) => {
       <Typography variant='body1'>date of birth: {patient.dateOfBirth}</Typography>
       <Typography variant='body1'>ssn: {patient.ssn}</Typography>
       <Typography variant='body1'>occupation: {patient.occupation}</Typography>
-      <AddEntryForm patientId={patient.id} onAddEntry={addEntryToPatient} />
+      <AddEntryForm patientId={patient.id} diagnoses={diagnoses} onAddEntry={addEntryToPatient} />
       <Box margin={'10px 0'}>
         <Typography variant='h6'>entries</Typography>
         {patient.entries.map(entry => (

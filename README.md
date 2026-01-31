@@ -84,14 +84,15 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 ### b. First steps with TypeScript
 - `part9/calculators`: Exercises 9.1-9.7, a simple Node/Express project written in TypeScript for calculating the body mass index and exercise statistics 
 ### c. Typing an Express app
-- `part9/patientor-backend`: Exercises 9.8-9.14, a simple medical record application for doctors who handle diagnoses and basic health information of their patients
-- `part9/patientor-frontend`: the pre-existing frontend for `part9/patientor-backend` that was provided as part of the course materials
 ### d. React with types
 - `part9/courseinfo`: Exercises 9.15-9.16, a simple app illustrating the use of TypeScript with React
 - `part9/flight-diary-frontend`: Exercises 9.17-9.20, a simple app for managing flight diaries
 - `part9/flight-diary-backend`: the pre-existing backend for `part9/flight-diary-frontend` that was provided as part of the course materials
 ### e. Grande finale: Patientor
+- `part9/patientor-backend`: Exercises 9.8-9.14, 9.21, 9.23, 9.27, the backend for a simple medical record application for doctors who handle diagnoses and basic health information of their patients
+- `part9/patientor-frontend`: Exercises 9.22, 9.24-9.26, 9.28-9.30, the React / Material UI frontend for a simple medical record application
 
+## Part 13. Using relational databases
 In progress...
 
 ---

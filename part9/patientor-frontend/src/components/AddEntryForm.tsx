@@ -1,27 +1,40 @@
-import { Box, Button, MenuItem, Select, TextField, Typography, Alert } from '@mui/material';
+import {
+  Box,
+  Button,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+  Alert,
+  InputLabel,
+  FormControl,
+  OutlinedInput,
+  Checkbox,
+  ListItemText,
+} from '@mui/material';
 import { useState } from 'react';
-import { Entry, HealthCheckRating } from '../types';
+import { Entry, HealthCheckRating, EntryFormValues } from '../types';
 import patientService from '../services/patients';
-import { EntryFormValues } from '../types';
 import { assertNever } from '../utils';
 import axios from 'axios';
 
 type AddEntryFormProps = {
   patientId: string;
+  diagnoses: Map<string, string>;
   onAddEntry: (entry: Entry) => void;
 };
 
-const AddEntryForm = ({ patientId, onAddEntry }: AddEntryFormProps) => {
+const AddEntryForm = ({ patientId, diagnoses, onAddEntry }: AddEntryFormProps) => {
   const [type, setType] = useState<Entry['type']>('HealthCheck');
   const [description, setDescription] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [specialist, setSpecialist] = useState('');
-  const [diagnosisCodes, setDiagnosisCodes] = useState('');
-  const [dischargeDate, setDischargeDate] = useState('');
+  const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
+  const [dischargeDate, setDischargeDate] = useState(new Date().toISOString().split('T')[0]);
   const [dischargeCriteria, setDischargeCriteria] = useState('');
   const [employerName, setEmployerName] = useState('');
-  const [sickLeaveStart, setSickLeaveStart] = useState('');
-  const [sickLeaveEnd, setSickLeaveEnd] = useState('');
+  const [sickLeaveStart, setSickLeaveStart] = useState(new Date().toISOString().split('T')[0]);
+  const [sickLeaveEnd, setSickLeaveEnd] = useState(new Date().toISOString().split('T')[0]);
   const [healthCheckRating, setHealthCheckRating] = useState<HealthCheckRating>(0);
 
   const [error, setError] = useState<string | null>(null);
@@ -29,14 +42,14 @@ const AddEntryForm = ({ patientId, onAddEntry }: AddEntryFormProps) => {
   const resetFields = () => {
     setError(null);
     setDescription('');
-    setDate('');
+    setDate(new Date().toISOString().split('T')[0]);
     setSpecialist('');
-    setDiagnosisCodes('');
-    setDischargeDate('');
+    setDiagnosisCodes([]);
+    setDischargeDate(new Date().toISOString().split('T')[0]);
     setDischargeCriteria('');
     setEmployerName('');
-    setSickLeaveStart('');
-    setSickLeaveEnd('');
+    setSickLeaveStart(new Date().toISOString().split('T')[0]);
+    setSickLeaveEnd(new Date().toISOString().split('T')[0]);
     setHealthCheckRating(0);
   };
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,8 +59,7 @@ const AddEntryForm = ({ patientId, onAddEntry }: AddEntryFormProps) => {
       description,
       date,
       specialist,
-      diagnosisCodes:
-        diagnosisCodes.length > 0 ? diagnosisCodes.split(',').map(c => c.trim()) : undefined,
+      diagnosisCodes: diagnosisCodes.length > 0 ? diagnosisCodes : undefined,
     };
 
     let entry: EntryFormValues;
@@ -128,6 +140,8 @@ const AddEntryForm = ({ patientId, onAddEntry }: AddEntryFormProps) => {
         <TextField
           label='Date'
           value={date}
+          type='date'
+          InputLabelProps={{ shrink: true }}
           onChange={e => setDate(e.target.value)}
           sx={{ margin: '5px 0' }}
         />
@@ -137,26 +151,43 @@ const AddEntryForm = ({ patientId, onAddEntry }: AddEntryFormProps) => {
           onChange={e => setSpecialist(e.target.value)}
           sx={{ margin: '5px 0' }}
         />
-        <TextField
-          fullWidth
-          label='Diagnosis codes (comma separated)'
-          value={diagnosisCodes}
-          onChange={e => setDiagnosisCodes(e.target.value)}
-          sx={{ margin: '5px 0' }}
-        />
+        <FormControl fullWidth sx={{ margin: '5px 0' }}>
+          <InputLabel>Diagnosis codes</InputLabel>
+          <Select
+            multiple
+            value={diagnosisCodes}
+            onChange={e =>
+              setDiagnosisCodes(
+                typeof e.target.value === 'string' ? e.target.value.split(',') : e.target.value,
+              )
+            }
+            input={<OutlinedInput label='Diagnosis codes' />}
+            renderValue={selected => selected.join(', ')}
+          >
+            {[...diagnoses.entries()].map(([code, name]) => (
+              <MenuItem key={code} value={code}>
+                <Checkbox checked={diagnosisCodes.indexOf(code) > -1} />
+                <ListItemText primary={`${code} ${name}`} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         {type === 'HealthCheck' && (
           <TextField
-            label='Health rating (0-3)'
+            label='Health rating'
             type='number'
+            inputProps={{ min: 0, max: 3 }}
             value={healthCheckRating}
             onChange={e => setHealthCheckRating(Number(e.target.value))}
-            sx={{ margin: '5px 0' }}
+            sx={{ margin: '5px 0', width: 100 }}
           />
         )}
         {type === 'Hospital' && (
           <>
             <TextField
               label='Discharge date'
+              type='date'
+              InputLabelProps={{ shrink: true }}
               value={dischargeDate}
               onChange={e => setDischargeDate(e.target.value)}
               sx={{ margin: '5px 0' }}
@@ -169,7 +200,6 @@ const AddEntryForm = ({ patientId, onAddEntry }: AddEntryFormProps) => {
             />
           </>
         )}
-
         {type === 'OccupationalHealthcare' && (
           <>
             <TextField
@@ -180,12 +210,16 @@ const AddEntryForm = ({ patientId, onAddEntry }: AddEntryFormProps) => {
             />
             <TextField
               label='Sick leave start'
+              type='date'
+              InputLabelProps={{ shrink: true }}
               value={sickLeaveStart}
               onChange={e => setSickLeaveStart(e.target.value)}
               sx={{ margin: '5px 0' }}
             />
             <TextField
               label='Sick leave end'
+              type='date'
+              InputLabelProps={{ shrink: true }}
               value={sickLeaveEnd}
               onChange={e => setSickLeaveEnd(e.target.value)}
               sx={{ margin: '5px 0' }}
