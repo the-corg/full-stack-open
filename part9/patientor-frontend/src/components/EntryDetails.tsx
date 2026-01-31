@@ -2,10 +2,7 @@ import { Entry } from '../types';
 import HospitalEntryDetails from './Entries/HospitalEntryDetails';
 import OccupationalHealthcareEntryDetails from './Entries/OccupationalHealthcareEntryDetails';
 import HealthCheckEntryDetails from './Entries/HealthCheckEntryDetails';
-
-const assertNever = (value: never): never => {
-  throw new Error(`Unhandled discriminated union member: ${JSON.stringify(value)}`);
-};
+import { assertNever } from '../utils';
 
 type EntryDetailsProps = {
   entry: Entry;

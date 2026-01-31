@@ -1,4 +1,4 @@
-import { Gender, Patient } from '../types';
+import { Entry, Gender, Patient } from '../types';
 import { Box, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import patientService from '../services/patients';
@@ -7,7 +7,7 @@ import MaleIcon from '@mui/icons-material/Male';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 import FemaleIcon from '@mui/icons-material/Female';
 import EntryDetails from './EntryDetails';
-
+import AddEntryForm from './AddEntryForm';
 
 type PatientPageProps = {
   diagnoses: Map<string, string>;
@@ -27,6 +27,9 @@ const PatientPage = ({ diagnoses }: PatientPageProps) => {
     void fetchPatientList();
   }, [id]);
 
+  const addEntryToPatient = (entry: Entry) =>
+    setPatient(patient ? { ...patient, entries: patient.entries.concat(entry) } : patient);
+
   if (!patient) return <p>Patient not found</p>;
 
   return (
@@ -44,6 +47,7 @@ const PatientPage = ({ diagnoses }: PatientPageProps) => {
       <Typography variant='body1'>date of birth: {patient.dateOfBirth}</Typography>
       <Typography variant='body1'>ssn: {patient.ssn}</Typography>
       <Typography variant='body1'>occupation: {patient.occupation}</Typography>
+      <AddEntryForm patientId={patient.id} onAddEntry={addEntryToPatient} />
       <Box margin={'10px 0'}>
         <Typography variant='h6'>entries</Typography>
         {patient.entries.map(entry => (
