@@ -92,9 +92,6 @@ Exercises 0.1 - 0.6: reading material on HTML and CSS, as well as three UML sequ
 - `part9/patientor-backend`: Exercises 9.8-9.14, 9.21, 9.23, 9.27, the backend for a simple medical record application for doctors who handle diagnoses and basic health information of their patients
 - `part9/patientor-frontend`: Exercises 9.22, 9.24-9.26, 9.28-9.30, the React / Material UI frontend for a simple medical record application
 
-## Part 13. Using relational databases
-In progress...
-
 ---
 
 **Certificate of completion for parts 0-7** ([verification link](https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/b9948d0ef83df67a9a4113dad9752af5)):
@@ -105,3 +102,7 @@ In progress...
 **Certificate of completion for part 8** ([verification link](https://studies.cs.helsinki.fi/stats/api/certificate/fs-graphql/en/5e5bbf02032381fed7b97c52fa3c6cd1)):
 ![Certificate of completion](certificate-graphql.png)
 
+---
+
+**Certificate of completion for part 9** ([verification link](https://studies.cs.helsinki.fi/stats/api/certificate/fs-typescript/en/8938ed7b3862fb010e8ad3475c514b81)):
+![Certificate of completion](certificate-typescript.png)
